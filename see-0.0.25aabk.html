@@ -1,0 +1,473 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src blob: data:; media-src blob:; connect-src 'self' https:; base-uri 'none'; form-action 'none'"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>see-0.0.25aabk</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:#eee;font-family:ui-monospace,Menlo,Consolas,monospace;overflow:hidden}
+#top{display:flex;align-items:center;gap:6px;padding:6px 6px 0;height:26px;min-height:26px;white-space:nowrap}
+#ver{font-size:9px;letter-spacing:.06em;flex:0 0 auto;color:#2d9bf0;font-weight:800;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer}
+#clock{flex:1;text-align:center;font-size:11px;font-weight:500;color:#ffcc66;opacity:.85;white-space:nowrap;overflow:hidden}
+#gpsRow{height:11px;text-align:center;font-size:6.5px;opacity:.55;color:#2d9bf0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#goldBar{position:fixed;left:0;right:0;bottom:56px;height:2px;width:0%;background:linear-gradient(90deg,#b8860b,#ffd700);opacity:.75;z-index:150;transition:width.15s linear}
+#goldStat{position:fixed;left:50%;bottom:62px;transform:translateX(-50%);font-size:7px;color:#111;background:#ffcc66;border-radius:999px;padding:2px 9px;z-index:151;display:none;white-space:nowrap;font-weight:900}
+#goldStat.show{display:block}
+.pill{border:1px solid #2d9bf0;border-radius:999px;padding:0 8px;height:18px;font-size:8px;font-weight:800;background:transparent;color:#2d9bf0;white-space:nowrap}
+#mid{display:flex;min-height:0;height:calc(100% - 38px - 68px);position:relative}
+.col{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden;position:relative}
+.colBody{flex:1;overflow:auto;min-height:0;padding:4px}
+#leftCol{flex:1.1 1 0%}
+#rightCol{flex:0.9 1 0%;background:#050505}
+#rightTop{position:sticky;top:0;z-index:3;display:flex;justify-content:center;align-items:center;padding:3px 6px;background:#080808;border-bottom:1px solid #111;height:24px;gap:6px}
+#typeRow{display:flex;align-items:center;gap:4px;padding:6px 4px;border-top:1px solid #1a1a1a;flex-shrink:0;background:#000}
+#prompt{color:#2d9bf0;font-size:14px;flex-shrink:0;font-weight:900}
+#cursor{display:none}
+@keyframes blink{50%{opacity:0}}
+#obs{flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:13px;min-width:0;caret-color:#fff}
+#obs::placeholder{opacity:.35;color:#2d9bf0}
+#split{width:2px;flex:0 0 1px;background:rgba(45,155,240,0.32);cursor:col-resize;touch-action:none;z-index:10;position:relative}
+#split::after{content:'';position:absolute;top:0;bottom:0;left:-6px;right:-6px}
+#evBody{display:flex;flex-direction:column;gap:12px;overflow:auto;-webkit-overflow-scrolling:touch;min-height:0}
+.line{font-size:11px;line-height:1.3;white-space:pre-wrap;word-break:break-word;padding:2px 0;border-bottom:1px solid #111}
+#bottom{position:fixed;left:0;right:0;bottom:0;background:#000;z-index:10;padding:6px 6px calc(6px + env(safe-area-inset-bottom));border-top:1px solid rgba(45,155,240,.12);display:flex;flex-direction:column;gap:4px;align-items:center}
+#hash{font-size:7px;opacity:.85;color:#2d9bf0;white-space:normal;word-break:break-all;text-align:center;width:100%;font-weight:500;letter-spacing:.03em;line-height:1.2;padding:2px 4px}
+#btns{display:flex;gap:8px;justify-content:center}
+#agpl{font-size:6px;opacity:.78;color:#2d9bf0;white-space:nowrap;text-align:center;width:100%;letter-spacing:.04em}
+#fullToggle{opacity:0.55;transition:all 0.2s}
+#fullToggle.fullOn{opacity:0.72 !important;border-color:#933 !important;color:#b88 !important;box-shadow:0 0 3px rgba(160,0,0,0.2)}
+#fullToggle.fullOn #fullDot{background:#800 !important;border-color:#944 !important;box-shadow:0 0 2px #600 !important}
+#pushWizard{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:80;display:none;flex-direction:column;padding:16px;overflow:auto}
+#pushWizard.show{display:flex}
+#about{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:90;display:none;padding:20px;overflow:auto;white-space:pre-wrap;font-size:10px}
+#about.show{display:block}
+#ver,.pill,#clock,#gpsRow,#hash,#agpl,#btns{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.line{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+#obs{user-select:text;-webkit-user-select:text}
+body.light{background:#fafafa!important;color:#111!important}
+body.light #left{background:#fff!important;color:#111!important}
+body.light #rightCol{background:#fff!important}
+body.light #r{background:#fff!important}
+body.light #evBody{background:#fff!important}
+body.light #bottom{background:#fafafa!important;border-top:1px solid #ddd!important}
+body.light #top{background:#fafafa!important}
+body.light .line{color:#111!important;border-color:#eee!important}
+body.light .evItem{border:1px solid #222;border-radius:12px;overflow:hidden;background:#0a0a0a;margin:8px 4px;display:block;min-height:140px}
+body.light #obs{color:#111!important;background:#fff!important}
+
+body.light #gpsModal>div{background:#fff!important;border-color:#ddd!important}
+body.light #gpsModal h3, body.light #gpsModal div{color:#111!important}
+body.light #pushWizard>div{background:#fff!important;border-color:#ddd!important}
+body.light #about{background:rgba(255,255,255,.92)!important;color:#111!important}
+body.light #goldBar{background:linear-gradient(90deg,#b8860b,#ffd700)!important}
+body.light .pill{border-color:#2d9bf0!important;color:#2d9bf0!important}
+body.light #rightTop{background:#f0f0f0!important;border-color:#ddd!important}
+body.light #bottom{background:#fafafa!important}
+
+
+body.light #bottom{background:#fff!important;border-top:1px solid #ddd!important}
+body.light #obs{background:#fff!important;color:#111!important;border:1px solid #ddd!important}
+body.light #obs::placeholder{color:#999!important}
+body.light #r .line{color:#111!important}
+body.light #evBody .evItem{border:1px solid #222;border-radius:12px;overflow:hidden;background:#0a0a0a;margin:8px 4px;display:block;min-height:140px}
+body.light #evBody .evItem div{color:#111!important}
+
+</style>
+</head>
+<body id="b">
+<div id="top"><span id="ver">see-0.0.25aabk</span><div id="clock">00:00:00.00</div><button class="pill" id="sw">SWITCH</button></div>
+<div id="gpsBox" style="display:flex;align-items:center;justify-content:center;height:18px;margin:3px 0"><div id="gpsRow" style="flex:1;text-align:center;font-size:7.5px;opacity:.82;color:#4fb3ff;cursor:pointer;letter-spacing:0.02em">GPS: tap to enable</div></div>
+<div id="goldBar"></div><div id="goldStat"></div>
+<div id="mid"><div class="col" id="leftCol"><div id="r" class="colBody"></div><div id="typeRow"><span id="prompt">></span><span id="cursor"></span><input id="obs" autocomplete="off" spellcheck="false" placeholder="type + enter"/></div></div><div id="split"></div><div class="col" id="rightCol"><div id="rightTop" style="gap:4px"><button class="pill" id="openTop" style="padding:0 8px">OPEN</button><button class="pill fullOn" id="fullToggle" style="display:flex;align-items:center;gap:3px;padding:0 6px;min-width:28px;font-size:7px"><span id="fullDot" style="width:6px;height:6px;border-radius:50%;background:#1a0000;border:1px solid #330000;display:inline-block"></span>FULL</button></div><div id="evBody" class="colBody"></div></div><div id="gpsModal" style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:95;display:none;flex-direction:column;padding:16px;overflow:auto"><div style="background:#111;border:1px solid #222;border-radius:12px;padding:16px;max-width:400px;margin:auto;width:100%"><h3 style="font-size:13px;color:#2d9bf0;margin-bottom:8px">GPS — BLOB</h3><div style="font-size:10px;line-height:1.5;white-space:pre-wrap;color:#ccc">S.E.E. uses GPS only if you tap.
+
+• Privacy: No auto tracking. Tap GPS line to enable.
+• BLOB: When GPS on, every note gets @lat,lon tag → proves where.
+</div><button class="pill" id="closeGpsModal" style="margin-top:12px">CLOSE</button></div></div></div>
+<div id="bottom"><div id="hash"></div><div id="btns"><button class="pill" id="mint">MINT</button><button class="pill" id="push">PUSH</button><button class="pill" id="wipe">WIPE</button></div><div id="agpl">see-0.0.25aabk AGPL-3.0</div></div>
+<div id="pushWizard"><div style="max-width:360px;margin:auto;background:#111;border:1px solid #222;border-radius:12px;padding:16px;width:100%"><h3 style="font-size:12px;color:#2d9bf0">PUSH — title grab</h3><div style="font-size:10px;color:#888;margin:6px 0 12px">Paste Instagram link to grab title</div><input id="pushUrl" placeholder="https://..." style="width:100%;padding:8px;background:#000;border:1px solid #222;border-radius:6px;color:#fff;font-size:11px"><div style="display:flex;gap:8px;margin-top:12px"><button class="pill" id="doPush">GRAB</button><button class="pill" id="closeWizard">CLOSE</button></div><div id="pushLog" style="font-size:9px;color:#666;margin-top:8px;white-space:pre-wrap"></div></div></div>
+<div id="about"></div>
+<script>
+
+const VER='see-0.0.25aabk';
+const verEl=document.getElementById('ver');
+const clockEl=document.getElementById('clock');
+const gpsRowEl=document.getElementById('gpsRow');
+const goldBarEl=document.getElementById('goldBar');
+const goldStatEl=document.getElementById('goldStat');
+const leftColEl=document.getElementById('leftCol');
+const splitEl=document.getElementById('split');
+const rEl=document.getElementById('r');
+const evBodyEl=document.getElementById('evBody');
+const obsEl=document.getElementById('obs');
+const hashEl=document.getElementById('hash');
+const mintBtn=document.getElementById('mint');
+const pushBtn=document.getElementById('push');
+const wipeBtn=document.getElementById('wipe');
+const swBtn=document.getElementById('sw');
+
+const openTopBtn=document.getElementById('openTop');
+const fullToggleBtn=document.getElementById('fullToggle');
+const pushWizardEl=document.getElementById('pushWizard');
+const aboutEl=document.getElementById('about');
+const gpsModalEl=document.getElementById('gpsModal');
+let items=[],evs=[],curPos=null,blobEnabled=false,dragging=false,startX=0,startLeft=0;
+function haptic(ms){try{if(navigator.vibrate)navigator.vibrate(ms);}catch(e){}}
+function iso(d){return d.toISOString();}
+function normalTime(s){try{return new Date(s).toLocaleString();}catch(e){return s;}}
+function sanitizeName(n){return n.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,80)||'file';}
+function escHtml(s){return (s+'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function esc(s){return escHtml(s);}
+function setGold(pct,txt){goldBarEl.style.width=pct+'%'; if(txt){goldStatEl.textContent=txt;goldStatEl.classList.add('show');} if(pct>=100||pct===0){setTimeout(()=>{goldBarEl.style.width='0%';goldStatEl.classList.remove('show');},1200);}}
+
+let prevHashStore = (()=>{ try{ return localStorage.getItem('see_prev')||'0000000000000000000000000000000000000000000000000000000000000000'; }catch(e){ return '0000000000000000000000000000000000000000000000000000000000000000'; } })();
+let genesisHash='0000000000000000000000000000000000000000000000000000000000000000';
+async function sha256Str(str){ const b=await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+function updateGoldFromHash(h){ try{ const strength=parseInt(h.slice(0,2),16); const pct=(strength/255*100).toFixed(1); goldBarEl.style.width=pct+'%'; goldStatEl.textContent='CHAIN '+strength+'/255 GOLD VIABLE '+h.slice(0,4); goldStatEl.classList.add('show'); setTimeout(()=>{ goldStatEl.classList.remove('show'); },1200); }catch(e){} }
+function backupChain(){ try{ const k='see_backup_'+Date.now(); localStorage.setItem(k, JSON.stringify({items:items.slice(-30),evs:evs.map(e=>({safe:e.safe,size:e.size,ts:e.ts})).slice(-10),prevHash:prevHashStore,ver:VER,time:new Date().toISOString()})); const backs=Object.keys(localStorage).filter(x=>x.startsWith('see_backup_')).sort(); while(backs.length>15){ localStorage.removeItem(backs.shift()); } }catch(e){} }
+setInterval(backupChain,45000);
+function tick(){let now=new Date();let h=String(now.getHours()).padStart(2,'0');let m=String(now.getMinutes()).padStart(2,'0');let s=String(now.getSeconds()).padStart(2,'0');let ms=String(now.getMilliseconds()).padStart(3,'0').slice(0,2);clockEl.textContent=h+':'+m+':'+s+'.'+ms;requestAnimationFrame(tick);} tick();
+function sDown(e){dragging=true;startX=(e.touches?e.touches[0].clientX:e.clientX);startLeft=leftColEl.getBoundingClientRect().width;e.preventDefault();document.body.style.userSelect='none';}
+function sMove(e){if(!dragging)return;const curX=(e.touches?e.touches[0].clientX:e.clientX);const diff=curX-startX;const newW=Math.max(80,Math.min(window.innerWidth-80,startLeft+diff));leftColEl.style.flex='0 0 '+newW+'px';e.preventDefault();}
+function sUp(){if(!dragging)return;dragging=false;document.body.style.userSelect='';}
+splitEl.addEventListener('pointerdown',sDown);window.addEventListener('pointermove',sMove,{passive:false});window.addEventListener('pointerup',sUp);
+splitEl.addEventListener('touchstart',sDown,{passive:false});
+splitEl.addEventListener('mousedown',sDown);
+window.addEventListener('mousemove',sMove);
+window.addEventListener('mouseup',sUp);window.addEventListener('touchmove',sMove,{passive:false});window.addEventListener('touchend',sUp);
+
+function isSystemNote(t){ if(!t) return true; return t.startsWith('S.E.E.?')||t.startsWith('s.e.e.')||t.startsWith('CAM/')||t.startsWith('UNZIPPED')||t.startsWith('UNZIPPING')||t.startsWith('IMPORTED')||t.startsWith('MINTED')||t.startsWith('SCAN')||t.startsWith('ERR ')||t.indexOf('Sovereign Evidence Engine')>-1; }
+function getFirstUserNote(){
+  for(let it of items){
+    let t=(it.t||'').trim();
+    if(!t) continue;
+    if(isSystemNote(t)) continue;
+    return t;
+  }
+  return null;
+}
+
+let aboutOpen=false;
+function showAbout(){
+  let first = getFirstUserNote();
+  let msg = "S.E.E.? Sovereign Evidence Engine\n"+VER+"\nFull hash viable: SHA-256 chain with prevHash linkage + GPS @lat,lon + STORE zip preserves inner hash — verified without opening wrapper.\n\nMake a new folder called \"s e e\" and put this file "+VER+".html in it.\n\nAll SEE-*.zip mints go into Download/s e e/ if you keep the html inside that folder and OPEN from there.\n\nRename your minted zip files however you like so you can organize.\n\nGPS: tap GPS line to enable. BLOB toggles @lat,lon tagging. BLOB mode runs S.E.E. inside blob:null/ for iOS GPS and smoother run.\n\nAGPL-3.0 only. Offline single file.\n\nFirst note: "+(first?first.slice(0,80):'s.e.e.?');
+  aboutEl.textContent=msg;
+  if(aboutOpen){
+    aboutEl.classList.remove('show');
+    aboutOpen=false;
+  }else{
+    aboutEl.classList.add('show');
+    aboutOpen=true;
+  }
+}
+verEl.addEventListener('click',showAbout);
+aboutEl.addEventListener('click',()=>{aboutEl.classList.remove('show'); aboutOpen=false;});
+fullToggleBtn.addEventListener('click',()=>{fullToggleBtn.classList.toggle('fullOn');haptic(10);});
+gpsRowEl.addEventListener('click',()=>{gpsModalEl.style.display='flex';});
+gpsModalEl.addEventListener('click',e=>{if(e.target===gpsModalEl)gpsModalEl.style.display='none';});
+
+(function(){
+  let box = gpsModalEl.querySelector('div');
+  box.innerHTML = '<h3 style="font-size:13px;color:#2d9bf0;margin-bottom:8px">GPS — BLOB</h3><div style="font-size:10px;line-height:1.5;white-space:pre-wrap;color:#ccc">S.E.E. uses GPS only if you tap.\n\n• Privacy: No auto tracking. Tap GPS line to enable.\n• BLOB: When GPS on, every note gets @lat,lon tag → proves where.\n• BLOB MODE: Runs S.E.E. inside blob:null/ URL — iOS needs this for GPS, also smoother (old Sledger mode).\n\nCurrent: <span id="gpsStatusText" style="color:#ffcc66">off</span></div><div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap"><button class="pill" id="closeGpsModal">CLOSE</button><button class="pill" id="blobBtnInside" style="padding:0 12px">BLOB OFF</button><button class="pill" id="enableGpsBtn" style="padding:0 12px">ENABLE GPS</button><button class="pill" id="blobPreviewBtn" style="padding:0 12px;background:#2d9bf0;color:#000">BLOB MODE</button></div>';
+  document.getElementById('closeGpsModal').addEventListener('click',()=>{gpsModalEl.style.display='none';});
+  const blobInside=document.getElementById('blobBtnInside');
+  const enableBtn=document.getElementById('enableGpsBtn');
+  const previewBtn=document.getElementById('blobPreviewBtn');
+  const statusText=document.getElementById('gpsStatusText');
+  function updateUI(){
+    if(blobInside){ if(blobEnabled){blobInside.textContent='BLOB ON'; blobInside.style.background='#2d9bf0'; blobInside.style.color='#000';} else {blobInside.textContent='BLOB OFF'; blobInside.style.background='transparent'; blobInside.style.color='#2d9bf0';} }
+    if(statusText){ if(curPos){statusText.textContent=curPos.lat.toFixed(5)+','+curPos.lon.toFixed(5)+(blobEnabled?' +BLOB':'');} else {statusText.textContent='blocked/off';} }
+    gpsRowEl.textContent=curPos?('GPS: '+curPos.lat.toFixed(5)+','+curPos.lon.toFixed(5)+(blobEnabled?' BLOB':'')):'GPS: tap to enable';
+  }
+  if(blobInside){
+    blobInside.addEventListener('click',()=>{
+      blobEnabled=!blobEnabled;
+      haptic(20);
+      updateUI();
+    });
+  }
+  if(enableBtn){
+    enableBtn.addEventListener('click',()=>{
+      if(navigator.geolocation){
+        gpsRowEl.textContent='GPS: locating...';
+        navigator.geolocation.getCurrentPosition(p=>{
+          curPos={lat:p.coords.latitude,lon:p.coords.longitude};
+          updateUI(); doHash(); haptic(20);
+        },err=>{
+          gpsRowEl.textContent='GPS blocked - '+err.message;
+          if(statusText) statusText.textContent='blocked';
+        },{enableHighAccuracy:true});
+      }else{
+        gpsRowEl.textContent='GPS not supported';
+      }
+    });
+  }
+  if(previewBtn){
+    previewBtn.addEventListener('click',()=>{ 
+      gpsModalEl.style.display='none';
+      setTimeout(()=>triggerBlobMode(),100);
+    });
+  }
+  window._updateGpsUI=updateUI;
+  window.triggerBlobPreview = function(){
+    // old small preview
+    let first = getFirstUserNote()||'s.e.e.?';
+    let html='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>s.e.e.? '+esc(first.slice(0,40))+'</title></head><body><div style="height:44px;background:#3b5998;color:#fff;display:flex;align-items:center;padding:0 12px"><span style="font-size:15px;font-weight:800">s.e.e.? '+esc(first)+'</span></div><div style="padding:12px">BLOB preview @ '+(curPos?curPos.lat.toFixed(5)+','+curPos.lon.toFixed(5):'no GPS')+'</div></body></html>';
+    let b=new Blob([html],{type:'text/html'});
+    let url=URL.createObjectURL(b);
+    try{ window.open(url,'_blank'); }catch(e){}
+    let modal=document.createElement('div'); modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:101;display:flex;flex-direction:column;padding:8px';
+    modal.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px;background:#111;border-radius:8px 8px 0 0"><span style="font-size:10px;color:#2d9bf0;font-weight:800">BLOB '+url.slice(0,40)+'</span><div style="display:flex;gap:6px"><button id="openTab2" class="pill">OPEN TAB</button><button id="closePrev2" class="pill">CLOSE</button></div></div><iframe style="flex:1;width:100%;border:none;background:#fff;border-radius:0 0 8px 8px"></iframe>';
+    document.body.appendChild(modal);
+    let iframe=modal.querySelector('iframe'); iframe.src=url;
+    modal.querySelector('#closePrev2').onclick=()=>{modal.remove();};
+    modal.querySelector('#openTab2').onclick=()=>{window.open(url,'_blank');};
+  };
+  window.triggerBlobMode = function(){
+    // Run entire S.E.E. inside blob:null URL - this is the old Sledger blob mode for iOS GPS and smooth run
+    try{
+      let currentHtml = document.documentElement.outerHTML;
+      // Ensure ver stays
+      let b=new Blob([currentHtml],{type:'text/html'});
+      let url=URL.createObjectURL(b);
+      // Open new tab with S.E.E. running inside blob: - address bar will show blob:null/...
+      let win=window.open(url,'_blank');
+      if(!win){
+        // fallback show modal with link
+        let modal=document.createElement('div'); modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:101;display:flex;flex-direction:column;padding:12px;justify-content:center;align-items:center';
+        modal.innerHTML='<div style="background:#111;padding:16px;border-radius:12px;max-width:320px;text-align:center"><div style="color:#2d9bf0;font-size:12px;font-weight:800;margin-bottom:8px">BLOB MODE</div><div style="font-size:10px;color:#ccc;margin-bottom:12px">Brave blocked popup. Tap to open S.E.E. in blob: mode. Address bar will show blob:null/... and GPS will work on iOS.</div><a href="'+url+'" target="_blank" style="display:inline-block;padding:8px 16px;background:#2d9bf0;color:#000;border-radius:8px;text-decoration:none;font-size:12px">OPEN BLOB MODE</a><div style="margin-top:12px"><button id="closeBlobMode" class="pill">CLOSE</button></div></div>';
+        document.body.appendChild(modal);
+        modal.querySelector('#closeBlobMode').onclick=()=>modal.remove();
+      }else{
+        // Also show confirmation that blob mode is running
+        let note=document.createElement('div'); note.style.cssText='position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:#2d9bf0;color:#000;padding:6px 12px;border-radius:20px;font-size:10px;font-weight:700;z-index:99';
+        note.textContent='BLOB MODE opened - check new tab, address bar shows blob:null/...';
+        document.body.appendChild(note);
+        setTimeout(()=>note.remove(),4000);
+      }
+    }catch(e){ console.log('blob mode fail',e); }
+  };
+})();
+
+function guessMime(name){ let l=name.toLowerCase(); if(l.endsWith('.jpg')||l.endsWith('.jpeg'))return 'image/jpeg'; if(l.endsWith('.png'))return 'image/png'; if(l.endsWith('.webp'))return 'image/webp'; if(l.endsWith('.mp4'))return 'video/mp4'; return 'image/jpeg'; }
+class MiniZipFile{constructor(n,d){this.name=n;this._data=d;}async async(t){if(t==='string')return new TextDecoder().decode(this._data);return this._data;}}
+class MiniZip{static async loadAsync(file){let buf=new Uint8Array(await file.arrayBuffer());let eocdPos=-1;let searchStart=Math.max(0,buf.length-65557);for(let i=buf.length-22;i>=searchStart;i--){if(buf[i]==0x50&&buf[i+1]==0x4B&&buf[i+2]==0x05&&buf[i+3]==0x06){eocdPos=i;break;}}let files={};if(eocdPos==-1)return {files};let total=buf[eocdPos+8]|buf[eocdPos+9]<<8;let off=buf[eocdPos+16]|buf[eocdPos+17]<<8|buf[eocdPos+18]<<16|buf[eocdPos+19]<<24;let p=off;for(let c=0;c<total;c++){if(p+46>buf.length)break;if(!(buf[p]==0x50&&buf[p+1]==0x4B&&buf[p+2]==0x01&&buf[p+3]==0x02))break;let cs=buf[p+20]|buf[p+21]<<8|buf[p+22]<<16|buf[p+23]<<24;let nl=buf[p+28]|buf[p+29]<<8;let el=buf[p+30]|buf[p+31]<<8;let cl=buf[p+32]|buf[p+33]<<8;let lo=buf[p+42]|buf[p+43]<<8|buf[p+44]<<16|buf[p+45]<<24;let ns=p+46;let ne=ns+nl;if(ne>buf.length)break;let name=new TextDecoder().decode(buf.slice(ns,ne));let lh=lo;let lhn=buf[lh+26]|buf[lh+27]<<8;let lhe=buf[lh+28]|buf[lh+29]<<8;let ds=lh+30+lhn+lhe;let de=ds+cs;if(de>buf.length)break;if(!name.endsWith('/'))files[name]=new MiniZipFile(name,buf.slice(ds,de));p=ne+el+cl;}return {files};}}
+function makeZip(files){
+  let localParts=[],centralParts=[],offset=0;
+  function crc32(data){let c=0xFFFFFFFF;for(let i=0;i<data.length;i++){c^=data[i];for(let j=0;j<8;j++)c=c&1?0xEDB88320^(c>>>1):c>>>1;}return (c^0xFFFFFFFF)>>>0;}
+  for(let f of files){
+    let nameBytes=new TextEncoder().encode(f.name);
+    let data=f.data instanceof Uint8Array?f.data:new TextEncoder().encode(f.data);
+    let crc=crc32(data);
+    let local=new Uint8Array(30+nameBytes.length+data.length);
+    let v=new DataView(local.buffer); v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0,true);v.setUint16(8,0,true);v.setUint16(10,0,true);v.setUint16(12,0,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,nameBytes.length,true);v.setUint16(28,0,true);
+    local.set(nameBytes,30);local.set(data,30+nameBytes.length); localParts.push(local);
+    let central=new Uint8Array(46+nameBytes.length); let cv=new DataView(central.buffer); cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0,true);cv.setUint16(10,0,true);cv.setUint16(12,0,true);cv.setUint16(14,0,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,nameBytes.length,true);cv.setUint16(30,0,true);cv.setUint16(32,0,true);cv.setUint16(34,0,true);cv.setUint16(36,0,true);cv.setUint32(42,offset,true); central.set(nameBytes,46); centralParts.push(central); offset+=local.length;
+  }
+  let centralSize=centralParts.reduce((a,b)=>a+b.length,0); let end=new Uint8Array(22); let ev=new DataView(end.buffer); ev.setUint32(0,0x06054b50,true);ev.setUint16(8,localParts.length,true);ev.setUint16(10,localParts.length,true);ev.setUint32(12,centralSize,true);ev.setUint32(16,offset,true);
+  let totalLen=offset+centralSize+22; let out=new Uint8Array(totalLen); let pos=0; for(let p of localParts){out.set(p,pos);pos+=p.length;} for(let p of centralParts){out.set(p,pos);pos+=p.length;} out.set(end,pos); return out;
+}
+
+async function handleFiles(list){
+  for(const file of list){
+    try{
+      const ts=iso(new Date()); const mb=(file.size/1024/1024).toFixed(2);
+      if(file.name.toLowerCase().endsWith('.zip')){
+        items.push({ts:ts,t:'UNZIPPING '+sanitizeName(file.name)+' '+mb+' MB...'}); render(); setGold(5,'UNZIPPING');
+        let zip=await MiniZip.loadAsync(file); let count=0;
+        if(zip.files['manifest.json']){
+          try{
+            let txt=await zip.files['manifest.json'].async('string'); let man=JSON.parse(txt);
+            if(man.items){ for(let old of man.items){ if(!old.t)continue; if(old.t.startsWith('CAM/')||old.t.startsWith('UNZIPPED')||old.t.startsWith('UNZIPPING')||old.t.startsWith('IMPORTED')||old.t.startsWith('MINTED')||old.t.startsWith('SCAN'))continue; if(items.find(x=>x.ts===old.ts&&x.t===old.t))continue; items.push({ts:old.ts||ts,t:old.t}); } }
+            if(man.evidence){
+              for(let evMeta of man.evidence){
+                let foundKey=null;
+                for(let kk in zip.files){ if(kk.endsWith('/'+evMeta.n) || kk=== 'evidence/'+evMeta.n || kk.split('/').pop()===evMeta.n){ foundKey=kk; break; } }
+                if(foundKey){
+                  try{
+                    let data=await zip.files[foundKey].async('uint8array');
+                    let mime=guessMime(evMeta.n);
+                    let blob=new Blob([data],{type:mime});
+                    let fileObj=new File([blob],evMeta.n,{type:mime});
+                    let thumb=null;
+                    try{ thumb=await makeThumbBlob(fileObj); }catch(e){ thumb=null; }
+                    let thumbUrl = thumb ? thumb.dataUrl : '';
+                    // keep full blob for mint, but display thumb only
+                    evs.push({n:evMeta.n,safe:sanitizeName(evMeta.n),size:data.length,ts:evMeta.ts||ts,url:thumbUrl,thumbUrl:thumbUrl,_file:fileObj,isImg:true, fullSize:data.length});
+                    count++;
+                    if(count%5===0){ render(); await new Promise(r=>setTimeout(r,10)); }
+                  }catch(e){
+                    console.log('ev fail',e);
+                  }
+                }
+              }
+            }
+          }catch(e){ console.log('manifest fail',e); }
+        }else{
+          for(let k in zip.files){
+            if(k.startsWith('evidence/') && k.indexOf('thumbnails')===-1){
+              try{
+                let data=await zip.files[k].async('uint8array');
+                let name=k.split('/').pop();
+                let mime=guessMime(name);
+                let blob=new Blob([data],{type:mime});
+                let fileObj=new File([blob],name,{type:mime});
+                let thumb=null; try{ thumb=await makeThumbBlob(fileObj); }catch(e){}
+                let thumbUrl = thumb ? thumb.dataUrl : '';
+                evs.push({n:name,safe:sanitizeName(name),size:data.length,ts:ts,url:thumbUrl,thumbUrl:thumbUrl,_file:fileObj,isImg:true, fullSize:data.length});
+                count++;
+                if(count%5===0){ render(); await new Promise(r=>setTimeout(r,10)); }
+              }catch(e){}
+            }
+          }
+        }
+        items.push({ts:iso(new Date()),t:'UNZIPPED '+count+' evidence from '+sanitizeName(file.name)}); setGold(100,'UNZIPPED '+count);
+      }else{
+        let safe=sanitizeName(file.name);
+        let thumb=null; try{ thumb=await makeThumbBlob(file); }catch(e){}
+        let thumbUrl = thumb ? thumb.dataUrl : '';
+        // display thumb only, keep full file handle for mint
+        evs.push({n:file.name,safe:safe,size:file.size,ts:ts,url:thumbUrl,thumbUrl:thumbUrl,_file:file,isImg:true, fullSize:file.size});
+        let gpsTag=blobEnabled&&curPos?' @'+curPos.lat.toFixed(5)+','+curPos.lon.toFixed(5):'';
+        items.push({ts:ts,t:'CAM/'+file.name+' '+mb+' MB'+gpsTag});
+      }
+    }catch(e){items.push({ts:iso(new Date()),t:'ERR '+file.name+' '+e.message});}
+    render(); doHash();
+  }
+  render();doHash();setGold(0,'');
+}
+function render(){
+  rEl.innerHTML=items.map(it=>{let txt=it.t||''; if(txt.indexOf('Sovereign Evidence Engine')>-1 && txt.length<80){txt='s.e.e.?';} return '<div class="line">'+escHtml(it.ts)+' '+escHtml(txt)+'</div>';}).join('');
+  if(evs.length===0){
+    evBodyEl.innerHTML='<div style="padding:20px;text-align:center;opacity:.4;font-size:10px">No evidence yet<br>OPEN a zip or photos</div>';
+  }else{
+    evBodyEl.innerHTML=evs.map((ev,idx)=>{
+      let src=ev.thumbUrl||ev.url||'';
+      let kb=(ev.fullSize||ev.size||0)/1024; let kbStr=kb>1024?(kb/1024).toFixed(2)+' MB':kb.toFixed(1)+' KB';
+      return '<div class="evItem" data-idx="'+idx+'"><img src="'+src+'" loading="lazy" style="width:100%;height:auto;min-height:120px;display:block;background:#111;object-fit:contain"><div style="padding:6px 8px"><div style="font-size:9px;opacity:.7;word-break:break-all">'+escHtml(ev.safe)+' '+kbStr+'</div><div style="font-size:8px;opacity:.5">'+escHtml(normalTime(ev.ts))+'</div></div></div>';
+    }).join('');
+  }
+  try{ rEl.scrollTop=rEl.scrollHeight; }catch(e){}
+  // ensure evBody scrolls to bottom if new items added
+  try{ if(evs.length>0) evBodyEl.scrollTop=evBodyEl.scrollHeight; }catch(e){}
+  evBodyEl.querySelectorAll('.evItem').forEach(el=>{
+    let sx=0,cx=0,drag=false;
+    el.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;drag=true;},{passive:true});
+    el.addEventListener('touchmove',e=>{if(!drag)return; cx=e.touches[0].clientX-sx; if(Math.abs(cx)>5)el.style.transform='translateX('+cx+'px)';},{passive:true});
+    el.addEventListener('touchend',e=>{if(!drag)return;drag=false; if(Math.abs(cx)>70){ let idx=parseInt(el.getAttribute('data-idx')); if(confirm('Remove?')){ evs.splice(idx,1); render(); doHash();}} el.style.transform=''; },{passive:true});
+  });
+}
+let fullHash='';
+function doHash(){
+  let curGpsVal = (()=>{ try{ return curPos? curPos.lat.toFixed(6)+','+curPos.lon.toFixed(6) : (localStorage.getItem('see_gps')||'blob:null'); }catch(e){ return 'blob:null'; } })();
+  let chainStr = items.map(i=>i.ts+'|'+i.t).join('\n')+'\n'+evs.map(e=>e.safe+'|'+e.size+'|'+e.ts+'|'+(e.gps||curGpsVal)).join('\n')+'|'+prevHashStore+'|'+curGpsVal+'|'+VER;
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(chainStr)).then(buf=>{
+    let arr=[...new Uint8Array(buf)]; fullHash=arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+    hashEl.textContent='SHA-256: '+fullHash+' '+VER+' prev '+prevHashStore.slice(0,8);
+    try{ localStorage.setItem('see_gps',curGpsVal); }catch(e){}
+    try{ updateGoldFromHash(fullHash); }catch(e){}
+  });
+}
+
+async function makeThumbBlob(file){
+  try{
+    let bmp=await createImageBitmap(file);
+    let c=document.createElement('canvas'); let w=bmp.width,h=bmp.height; let s=Math.min(1,1024/Math.max(w,h)); c.width=Math.round(w*s); c.height=Math.round(h*s); let ctx=c.getContext('2d'); ctx.drawImage(bmp,0,0,c.width,c.height); let blob=await new Promise(r=>c.toBlob(r,'image/jpeg',0.62)); let dataUrl=c.toDataURL('image/jpeg',0.62); bmp.close(); return {blob,dataUrl};
+  }catch(e){
+    try{
+      let url=URL.createObjectURL(file);
+      let img=await new Promise((res,rej)=>{ let im=new Image(); im.onload=()=>res(im); im.onerror=rej; im.src=url; });
+      let c=document.createElement('canvas'); let w=img.naturalWidth||img.width, h=img.naturalHeight||img.height; let s=Math.min(1,1024/Math.max(w,h)); c.width=Math.round(w*s); c.height=Math.round(h*s); let ctx=c.getContext('2d'); ctx.drawImage(img,0,0,c.width,c.height); let blob=await new Promise(r=>c.toBlob(r,'image/jpeg',0.62)); let dataUrl=c.toDataURL('image/jpeg',0.62); URL.revokeObjectURL(url); return {blob,dataUrl};
+    }catch(e2){ return null; }
+  }
+}
+obsEl.addEventListener('keydown',e=>{ if(e.key==='Enter'){ let t=obsEl.value.trim(); if(!t)return; let ts=iso(new Date()); let entry=t+(blobEnabled&&curPos?' @'+curPos.lat.toFixed(5)+','+curPos.lon.toFixed(5):''); items.push({ts:ts,t:entry}); obsEl.value=''; render(); doHash(); haptic(10);} });
+openTopBtn.addEventListener('click',()=>{ let inp=document.createElement('input'); inp.type='file'; inp.multiple=true; inp.accept='*/*'; inp.onchange=()=>handleFiles(inp.files); inp.click(); });
+swBtn.addEventListener('click',()=>{ try{ document.body.classList.toggle('light'); }catch(e){ document.body.classList.toggle('light'); } try{ localStorage.setItem('see_theme', document.body.classList.contains('light')?'light':'dark'); }catch(e){} try{ haptic(10); }catch(e){} });
+mintBtn.addEventListener('click', async ()=>{
+  if(items.length===0&&evs.length===0){alert('nothing');return;}
+  setGold(2,'MINTING');
+  let timestamp=iso(new Date());
+  let firstUser = getFirstUserNote()||'s.e.e.?';
+  // Preserve original capitalization for header, but title attr lowercased per old spec? Now preserve caps as requested
+  let titlePreserved = firstUser.slice(0,80);
+  let titleLower = firstUser.slice(0,80).toLowerCase();
+  let notesSorted=[...items].sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+  let evSorted=[...evs].sort((a,b)=>new Date(a.ts)-new Date(b.ts));
+  let unified=[]; let i=0,j=0;
+  while(i<notesSorted.length||j<evSorted.length){
+    let nt=i<notesSorted.length?notesSorted[i]:null;
+    let et=j<evSorted.length?evSorted[j]:null;
+    if(nt&&et){ if(new Date(nt.ts)<=new Date(et.ts)){ unified.push({kind:'note',t:nt.t,ts:nt.ts}); i++; } else { unified.push({kind:'ev',ev:et,ts:et.ts}); j++; } }
+    else if(nt){ unified.push({kind:'note',t:nt.t,ts:nt.ts}); i++; }
+    else { unified.push({kind:'ev',ev:et,ts:et.ts}); j++; }
+  }
+  let ordered=[...unified.filter(u=>!u.t||u.t.indexOf('Sovereign Evidence Engine')===-1), ...unified.filter(u=>u.t&&u.t.indexOf('Sovereign Evidence Engine')>-1)];
+  let fromTs=notesSorted[0]?.ts||evSorted[0]?.ts||timestamp;
+  let toTs=notesSorted[notesSorted.length-1]?.ts||evSorted[evSorted.length-1]?.ts||timestamp;
+  let fromStr=normalTime(fromTs); let toStr=normalTime(toTs);
+  let shortHash=fullHash.slice(0,12)||'000000000000';
+  function isSystemMsg(t){ return t.startsWith('CAM/')||t.startsWith('UNZIPPED')||t.startsWith('UNZIPPING')||t.startsWith('IMPORTED')||t.startsWith('MINTED')||t.startsWith('SCAN')||t.startsWith('ERR '); }
+  let usedNoteIdx=new Set();
+  let timelineHtmlCanon=(srcMap)=>ordered.map((u,idx)=>{
+    if(u.kind==='note'){
+      let t=u.t||'';
+      if(t.indexOf('Sovereign Evidence Engine')>-1 || t.indexOf('see-0.0.24aa')>-1){ return ''; }
+      if(isSystemMsg(t)){
+        return '<div style="margin:4px 0;padding:3px 6px;background:#f9f9f9;border:1px dashed #e0e0e0;border-radius:4px"><div style="font-size:6px;opacity:.35;word-break:break-word">'+esc(t)+'</div><div style="font-size:5px;opacity:.25">'+esc(normalTime(u.ts))+'</div></div>';
+      }
+      if(idx>0 && ordered[idx-1].kind==='ev' && usedNoteIdx.has(idx)){ return ''; }
+      if(idx>0 && ordered[idx-1].kind==='ev'){ return ''; }
+      return '<div style="margin:12px 0;border:1px solid #e0e0e0;border-radius:10px;background:#fff"><div style="padding:8px 10px"><div style="font-size:13px;color:#111;white-space:pre-wrap;word-break:break-word">'+esc(t)+'</div><div style="font-size:8px;opacity:.5;margin-top:4px">'+esc(normalTime(u.ts))+'</div></div></div>';
+    }else{
+      let ev=u.ev;
+      let nextNote=''; let nextIdx=-1;
+      if(idx+1<ordered.length && ordered[idx+1].kind==='note' && !isSystemMsg(ordered[idx+1].t||'')){
+        nextNote=ordered[idx+1].t||''; nextIdx=idx+1; usedNoteIdx.add(nextIdx);
+      }
+      let imgSrc=srcMap? (srcMap[ev.safe]||('evidence/thumbnails/'+esc(ev.safe))) : ('evidence/thumbnails/'+esc(ev.safe));
+      let fileLegal=esc(ev.safe)+' '+(ev.size/1024).toFixed(0)+'kb hash '+fullHash.slice(0,32);
+      return '<div style="margin:12px 0;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden;background:#fff"><div style="background:#f2f2f2;display:flex;justify-content:center"><img src="'+imgSrc+'" style="width:100%;height:auto;display:block"></div><div style="padding:0 8px"><div style="font-size:5px;opacity:.45;word-break:break-all;padding:3px 0">'+fileLegal+'</div></div><div style="padding:6px 10px 8px"><div style="font-size:13px;color:#111;white-space:pre-wrap;word-break:break-word">'+esc(nextNote)+'</div><div style="font-size:8px;opacity:.5;margin-top:4px">'+esc(normalTime(u.ts))+'</div></div></div>';
+    }
+  }).join('');
+  let thumbMap={},thumbFiles=[];
+  for(let i=0;i<evs.length;i++){ let ev=evs[i]; if(ev._file){ setGold(5+Math.floor(i/evs.length*25),'THUMB '+i); let t=await makeThumbBlob(ev._file); if(t){ thumbMap[ev.safe]=t.dataUrl; let b=new Uint8Array(await t.blob.arrayBuffer()); thumbFiles.push({name:'evidence/thumbnails/'+ev.safe,data:b}); } await new Promise(r=>setTimeout(r,0)); } }
+  // Header preserves caps: s.e.e.? <First Typed Line with original caps>
+  let headerTitle = (()=>{ let t=titlePreserved.trim(); if(!t || t.toLowerCase().startsWith('s.e.e')) return t||'s.e.e.?'; return 's.e.e.? '+t; })();
+  let headerHtml='<div id="fb-top" style="height:44px;background:#3b5998;color:#fff;display:flex;align-items:center;padding:0 12px;position:fixed;top:0;left:0;right:0;z-index:50"><span style="font-size:15px;font-weight:800;letter-spacing:0.02em">'+esc(headerTitle)+'</span></div>';
+  let outerStart='<div style="margin:0;background:#fff;border:1px solid #ddd;border-top:none;border-radius:0 0 8px 8px;overflow:hidden;padding:8px"><div style="font-size:8px;letter-spacing:.16em;text-transform:uppercase;opacity:.55;font-weight:700;margin-bottom:6px">TIMELINE</div><div style="font-size:9px;opacity:.70;margin-bottom:8px">from '+esc(fromStr)+' to '+esc(toStr)+'</div>';
+  let outerEnd='</div>';
+  let cumulative='<div style="margin:16px 8px 20px;padding:10px;border:1px dashed #bbb;border-radius:8px;background:#f9f9f9;text-align:center"><div style="font-size:9px;opacity:.6">S.E.E.? Sovereign Evidence Engine '+VER+'</div><div style="font-size:8px;opacity:.5">AGPL-3.0</div><div style="font-size:5px;opacity:.4;word-break:break-all;margin-top:4px">'+esc(fullHash)+'</div><div style="font-size:5px;opacity:.4;margin-top:2px">prev '+esc(hashEl.textContent.slice(0,24))+' chain s.e.e.? one-to-one posterity | '+esc(fromStr)+' to '+esc(toStr)+'</div></div>';
+  let versionFooter='<div style="text-align:center;padding:16px 8px 24px;font-size:7px;opacity:.35">minted with '+VER+' @ '+esc(timestamp)+'</div>';
+  let bodyInner=outerStart+timelineHtmlCanon(thumbMap)+outerEnd+cumulative+versionFooter;
+  let zipHtml='<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(headerTitle)+' - '+shortHash+'</title><style>*{box-sizing:border-box}html,body{margin:0;padding:0;background:#f5f5f5;font-family:Helvetica,Arial,sans-serif;color:#111}#fb-top{height:44px;background:#3b5998;color:#fff;display:flex;align-items:center;padding:0 12px;position:fixed;top:0;left:0;right:0;z-index:50}#fb-top span{font-size:15px;font-weight:800}.wrap{padding-top:44px}</style></head><body>'+headerHtml+'<div class="wrap">'+bodyInner+'</div></body></html>';
+  let files=[]; files.push({name:'index.html',data:zipHtml}); let man={items:items,evidence:evs.map(x=>({n:x.n,size:x.size,ts:x.ts})),ver:VER,ts:timestamp,hash:fullHash}; files.push({name:'manifest.json',data:JSON.stringify(man,null,2)});
+  for(let i=0;i<evs.length;i++){ let ev=evs[i]; if(ev._file){ let buf=new Uint8Array(await ev._file.arrayBuffer()); files.push({name:'evidence/'+ev.safe,data:buf}); if(i%3===0){ setGold(10+Math.floor((i/evs.length)*70),'PACK '+i); await new Promise(r=>setTimeout(r,5)); } } }
+  for(let tf of thumbFiles){ files.push({name:tf.name,data:tf.data}); }
+  setGold(90,'ZIPPING');
+  let zipData=makeZip(files); let fileName='SEE-'+shortHash+'.zip';
+  let blob=new Blob([zipData],{type:'application/zip'}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=fileName; a.click();
+  setGold(100,'MINT '+fullHash.slice(0,4)+' GOLD FLICK'); setTimeout(()=>{ try{ updateGoldFromHash(fullHash); }catch(e){} },500); setGold(30,'MINTING - BLOB');
+  try{
+    let b=new Blob([zipHtml],{type:'text/html'});
+    let url=URL.createObjectURL(b);
+    let modal=document.createElement('div'); modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:100;display:flex;flex-direction:column;padding:8px';
+    modal.innerHTML='<div style="display:flex;justify-content:space-between;align-items:center;padding:6px;background:#111;border-radius:8px 8px 0 0"><span style="font-size:10px;color:#2d9bf0;font-weight:800">BLOB '+url.slice(0,40)+'</span><div style="display:flex;gap:6px"><button id="openTab" class="pill">OPEN TAB - blob: in bar</button><button id="closePrev" class="pill">CLOSE</button></div></div><iframe style="flex:1;width:100%;border:none;background:#fff;border-radius:0 0 8px 8px"></iframe>';
+    document.body.appendChild(modal); let iframe=modal.querySelector('iframe'); iframe.src=url;
+    modal.querySelector('#closePrev').onclick=()=>{modal.remove();};
+    try{ window.open(url,'_blank'); }catch(e){}
+    modal.querySelector('#openTab').onclick=()=>{window.open(url,'_blank');};
+    setGold(100,'MINTED '+evs.length+' BLOB');
+  }catch(e){ setGold(100,'MINTED'); }
+  items.push({ts:iso(new Date()),t:'MINTED '+evs.length+' evidence, hash '+fullHash.slice(0,12)}); render(); doHash(); setGold(100,'MINTED');
+});
+wipeBtn.addEventListener('click',()=>{if(!confirm('WIPE all?'))return; evs.forEach(ev=>{try{URL.revokeObjectURL(ev.url);}catch(e){}}); items=[]; evs=[]; let zz=iso(new Date()); items=[{ts:zz,t:'S.E.E.? Sovereign Evidence Engine'}]; render(); doHash(); setGold(0,'WIPED');});
+pushBtn.addEventListener('click',()=>{pushWizardEl.classList.add('show');});
+document.getElementById('closeWizard').addEventListener('click',()=>pushWizardEl.classList.remove('show'));
+pushWizardEl.addEventListener('click',e=>{if(e.target===pushWizardEl)pushWizardEl.classList.remove('show');});
+document.getElementById('doPush').addEventListener('click',async()=>{ let url=document.getElementById('pushUrl').value.trim(); if(!url)return; let log=document.getElementById('pushLog'); log.textContent='GRABBING...'; try{ let res=await fetch('https://corsproxy.io/?'+encodeURIComponent(url)); let txt=await res.text(); let m=txt.match(/<title>(.*?)<\/title>/i); let title=m?m[1]:'PUSH'; items.push({ts:iso(new Date()),t:title}); log.textContent='GRABBED '+title; render(); doHash(); }catch(e){ log.textContent='ERR '+e.message; } });
+function startGPS(){gpsRowEl.textContent='GPS: tap to enable'; if(window._updateGpsUI) window._updateGpsUI();} startGPS();
+
+let zuluNow=iso(new Date());
+window.addEventListener("load",()=>{ setTimeout(()=>{ try{ obsEl.focus(); }catch(e){} }, 150); });
+// first impression: cursor flash immediately with time code
+setTimeout(()=>{ try{ obsEl.focus(); }catch(e){} }, 100);
+obsEl.addEventListener("focus",()=>{ obsEl.placeholder="type + enter"; }); if(items.length===0){items.push({ts:zuluNow,t:'S.E.E.? Sovereign Evidence Engine'});} render(); doHash();
+
+</script></body></html>
