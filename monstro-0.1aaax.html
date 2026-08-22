@@ -1,0 +1,253 @@
+<!-- monstruo-0.1aaax — ZITHUB + ZITCOIN — BITCOIN+GITHUB=ZITCOIN — SINGLE FILE SPAWNS ZITHUB INSIDE — RESIZABLE KB FIXED + 3 PAGES SYM + ULTRA COLOR 320px 0.35 — 2026-08-21 -->
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>0.1aaax - ZITHUB+ZITCOIN</title><style>
+*{box-sizing:border-box;-webkit-user-select:none;user-select:none}
+html,body{margin:0;height:100%;overflow:hidden;position:fixed;inset:0;background:#000;color:#ddd;font-family:monospace;overscroll-behavior:none}
+#app{height:100dvh;width:100vw;display:flex;flex-direction:column;background:#000}
+#top{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;padding:2px 4px;border-bottom:1px solid #111;background:#000;font-size:8px;white-space:nowrap;overflow:hidden}
+#top-left{display:flex;align-items:center;gap:4px}#top-right{display:flex;align-items:center;gap:2px}
+#top button{background:#111;border:1px solid #222;color:#777;padding:2px 4px;font-size:8px}
+#LANG{border-color:#D4AF37!important;color:#D4AF37!important;font-weight:bold}
+#CAM{border:1px solid #f00!important;color:#f00!important;width:22px;height:22px;padding:0!important;background:#000!important}
+#BTLIGHT{width:6px;height:6px;background:#0f0;border-radius:50%;display:inline-block;box-shadow:0 0 6px #0f0;animation:b 2s infinite}
+@keyframes b{0%,100%{opacity:1}50%{opacity:.3}}
+#log{flex:1 1 auto;overflow-y:auto;padding:2px 8px;font-size:13px;background:#000;min-height:0}
+#log.e{padding:2px 0;border-bottom:1px solid #0a0a0a;white-space:pre-wrap;word-break:break-word}
+#log.ts{color:#D4AF37;font-size:9px;margin-right:6px}
+#log img{max-width:92%;border:1px solid #333;display:block;margin:4px 0;background:#fff}
+#tripa{display:block;flex:0 0 auto;max-height:56vh;overflow:auto;background:#080808;border-top:1px solid #222;padding:5px;font-size:10px;color:#aaa;line-height:1.3}
+#tripa button{background:#111;border:1px solid #333;color:#ccc;padding:3px 5px;font-size:8px;margin:1px}
+#tripa input[type=file]{background:#111;color:#fff;border:1px solid #333;font-size:8px;margin:1px;padding:2px;max-width:110px}
+#const{border:1px solid #0a3d9c;padding:4px;background:#0a0a18;color:#D4AF37;text-align:center;font-weight:bold;margin-bottom:4px;font-size:10px;white-space:pre-wrap}
+#controls-top{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:4px;background:#000;padding:2px;border:1px solid #222}
+#controls-top button{font-size:8px;padding:3px 4px}
+#verifyBox{border:1px solid #333;padding:4px;margin-top:4px;background:#0e0e0e}
+#foot{flex:0 0 auto;display:flex;flex-direction:column;background:#0e0e0e;border-top:1px solid #222}
+#pull{height:20px;display:flex;align-items:center;justify-content:center;background:#111;cursor:ns-resize;touch-action:none;border-top:1px solid #222;border-bottom:1px solid #222}
+#pull div{width:44px;height:4px;background:#666;border-radius:2px}
+#cmdline{display:flex;align-items:center;padding:3px 6px;background:#000;border-bottom:1px solid #1a1a1a;font-size:13px;min-height:26px}
+#caret{color:#D4AF37;font-weight:bold;margin-right:2px}
+#timecode{color:#D4AF37;font-size:9px;margin-right:5px}
+#inputwrap{flex:1;display:flex;overflow:hidden}
+#txtbefore{color:#fff;white-space:pre}
+#cursor{width:2px;height:13px;background:#D4AF37;display:inline-block;animation:blinkc 1s step-end infinite}
+@keyframes blinkc{0%,50%{opacity:1}51%,100%{opacity:0}}
+#txtafter{color:#666;white-space:pre}
+#kb{display:grid;gap:1px;padding:2px;background:#080808;height:42vh;min-height:26vh;max-height:70vh}
+.kbrow{display:flex;gap:1px;flex:1}
+.kbrow button{flex:1;background:#151515;border:1px solid #252525;color:#ddd;font-size:12px;padding:0;min-width:0}
+.kwide{flex:2.2!important}
+.kenter{flex:1.5!important;background:#0a3d9c!important;color:#fff!important}
+.karrow{flex:0.7!important;background:#222!important;color:#D4AF37!important}
+#qrbox,#zithubBox{display:none;position:fixed;inset:0;background:#000;z-index:99;flex-direction:column}
+#goldbar{height:4px;width:0%;background:#D4AF37;transition:width.4s}
+#qrcenter{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px}
+#qrbox canvas{width:84vw;max-width:340px;aspect-ratio:1/1;background:#fff;border:3px solid #fff}
+#zithubList{flex:1;overflow:auto;padding:6px}
+.card{border:1px solid #333;background:#0e0e0e;padding:6px;margin-bottom:6px;word-break:break-word}
+.card.hub{border-color:#0ff}.card.zit{border-color:#ff0;background:#1a1a00}
+.card.meta{color:#D4AF37;font-size:9px}
+.card img{max-width:92%;border:1px solid #333;margin:3px 0;background:#fff}
+</style></head><body><div id=app>
+<div id=top><div id=top-left><span id=BTLIGHT></span><span id=VER style="font-size:8px">0.1aaax ZIT</span></div><div id=top-right><button id=LANG>ENG</button><button id=CAM></button><button id=BT>[BT]</button><button id=FS>[FS]</button><button id=TRIPA-BTN>[TRIPAS]</button></div></div>
+<div id=log></div>
+<div id=tripa>
+<div id=const></div>
+<div id=controls-top>
+<button id=SHARE></button><button id=SCAN></button><button id=JOIN></button><button id=MINT></button><button id=WRAP></button><button id=ZITHUB style="background:#0a3d9c;color:#fff;border-color:#0ff">[ZITHUB]</button><button id=ZITCOIN style="background:#ffeb3b;color:#000;border-color:#f00;font-weight:bold">[ZITCOIN]</button><button id=COLORTOG></button><button id=COPY>[COPY]</button><button id=PASTE>[PASTE]</button><button id=CLEAR>[CLEAR]</button>
+</div>
+<div id=info style="border:1px solid #0a3d9c;padding:4px;background:#0a0a18;color:#aaccff;margin-bottom:4px;white-space:pre-wrap;font-size:9px"></div>
+<div id=verifyBox>
+<div style="color:#D4AF37;font-weight:bold;margin-bottom:2px;font-size:9px" id=verifyTitle></div>
+<div style="display:flex;flex-wrap:wrap;gap:3px;align-items:center"><div><span class="lblA"></span> <input type="file" id=fileA></div><div><span class="lblB"></span> <input type="file" id=fileB></div><button id=COMPARE></button><span id=compareResult style="font-weight:bold;margin-left:3px;font-size:9px"></span></div>
+<div style="margin-top:5px;display:flex;flex-wrap:wrap;gap:3px;align-items:center"><div><span id=lblFile></span> <input type="file" id=fileVerify></div><div><span id=lblMan></span> <input type="file" id=fileManifest></div><button id=VERIFY_HASH></button><span id=verifyResult style="font-weight:bold;margin-left:3px;font-size:10px"></span></div>
+<div id=hashDetails style="margin-top:3px;color:#666;font-size:7px;white-space:pre-wrap"></div>
+<div style="margin-top:6px;border-top:1px solid #333;padding-top:3px;display:flex;flex-wrap:wrap;gap:3px;align-items:center"><div><span id=lblGen></span> <input type="file" id=fileGen></div><button id=GEN_HASH></button><button id=PUSH_HUB style="background:#0ff;color:#000;font-weight:bold">[PUSH ZITHUB]</button><button id=PUSH_ZIT style="background:#ffeb3b;color:#000;font-weight:bold">[PUSH ZITCOIN]</button><span id=genResult style="color:#0f0;font-size:7px;margin-left:3px"></span></div>
+</div>
+<div id=btlog style="margin-top:3px;color:#0f0;font-size:7px"></div>
+<div id=roomui style="margin-top:3px;display:none;border:1px solid #333;padding:2px"><span style="color:#D4AF37;font-size:8px">CODE:</span> <span id=roomcode style="color:#fff;font-weight:bold;font-size:8px">----</span></div>
+</div>
+<div id=foot>
+<div id=pull><div></div></div>
+<div id=cmdline><span id=caret>></span><span id=timecode>00:00:00</span><div id=inputwrap><span id=txtbefore></span><span id=cursor></span><span id=txtafter></span></div></div>
+<div id=kb></div>
+</div>
+</div>
+<div id=qrbox><div id=goldbar></div><button id=QRCLOSE style="position:absolute;top:5px;right:5px;background:#111;border:1px solid #333;color:#fff;padding:3px 5px;font-size:8px">[X]</button><div id=qrcenter><canvas id=qrcanvas width=360 height=360></canvas><div id=qrhashdisplay style="color:#D4AF37;font-size:7px;margin-top:3px"></div><textarea id=qrtext readonly style="width:90%;max-width:340px;height:30px;background:#111;color:#fff;border:1px solid #333;font-size:6px;margin-top:3px;padding:2px"></textarea><div id=qrstatus style="color:#D4AF37;font-size:8px;margin-top:3px"></div><button id=camBtn style="margin-top:8px;background:#000;border:1px solid #f00;width:22px;height:22px"><span style="color:#f00"></span></button><input type="file" id=camFile accept="image/*" capture="environment" style="display:none"><input type="file" id=scanFile accept="image/*" style="display:none"></div></div>
+<div id=zithubBox><div style="display:flex;justify-content:space-between;align-items:center;padding:4px 6px;border-bottom:1px solid #222;background:#0a0a0a"><span id=zithubTitle style="color:#D4AF37;font-size:11px;font-weight:bold"> ZITHUB +  ZITCOIN — Bitcoin+GitHub=Zitcoin</span><button id=ZITHUB_CLOSE style="background:#111;border:1px solid #333;color:#fff;padding:3px 6px;font-size:8px">[X]</button></div><div style="display:flex;gap:3px;padding:4px;background:#080808;flex-wrap:wrap"><button id=tabHub style="background:#0a3d9c;color:#fff;border:1px solid #0ff;padding:4px 6px;font-size:8px">[ZITHUB]</button><button id=tabZit style="background:#111;border:1px solid #ff0;color:#ff0;padding:4px 6px;font-size:8px">[ZITCOIN]</button><button id=tabAll style="background:#111;border:1px solid #333;color:#ccc;padding:4px 6px;font-size:8px">[ALL]</button><button id=exportBtn style="background:#111;border:1px solid #333;color:#ccc;padding:4px 6px;font-size:8px">[EXPORT]</button><button id=clearBtn style="background:#111;border:1px solid #f00;color:#f00;padding:4px 6px;font-size:8px">[CLEAR]</button><span id=count style="color:#0f0;font-size:8px;margin-left:4px"></span></div><div id=zithubList></div><div id=empty style="color:#666;padding:8px;font-size:9px">Empty — MINT  PUSH ZITHUB  [ZITHUB] — Bitcoin+GitHub=Zitcoin — Monstruo spawns ZitHub inside main — no internet needed</div></div>
+<script>
+var LANG='es';var COLOR_MODE=true;var KB_MODE=0;var SHIFT_ON=false;var Z_FILTER='zithub';
+var I18N={
+es:{langBtn:'ENG',constText:'CONSTITUCION MEXICANA Art 6,7,9,16 — QR es recibo',share:'[SHARE QR]',scan:'[SCAN QR]',join:'[JOIN CODE]',mint:'[MINT ZIP]',wrap:'[WRAP - NO ABRIR]',cOn:'[COLOR]',cOff:'[B/W]',info:'[BT] Offline: Ajustes>BT>Emparejar — [COPY]/[PASTE] — iPhone hotspot sin internet como router\n[NET] TNSBAC: codigo 7DBD — tracker WebRTC cifrado\n[ZITHUB] Bitcoin+GitHub=Zitcoin — Main spawns ZitHub inside — MINT  PUSH ZITHUB  [ZITHUB] — un solo archivo — continuidad\n[ZITCOIN] Teens: MINT zit  PUSH ZITCOIN — prueba de grano —  — ZitHub+Zitcoin',verifyTitle:' VERIFICAR',lblA:'A:',lblB:'B:',compare:'[A==B]',lblFile:'File:',lblMan:'Man:',verify:'[VERIFICAR]',lblGen:'Gen:',gen:'[SHA256+ZIP]',btlog:'v0.1aaax — ZITHUB+ZITCOIN — Bitcoin+GitHub=Zitcoin — single file spawns hub — resizable fixed — 3 SYM pages — color 320px',qrStatus:'QR offline'},
+en:{langBtn:'ESP',constText:'US CONSTITUTION 1st,4th,5th,14th — QR is receipt',share:'[SHARE QR]',scan:'[SCAN QR]',join:'[JOIN CODE]',mint:'[MINT ZIP]',wrap:'[WRAP - DO NOT OPEN]',cOn:'[COLOR]',cOff:'[B/W]',info:'[BT] Offline: Settings>BT>Pair — [COPY]/[PASTE] — iPhone hotspot works without internet as router\n[NET] TNSBAC: code 7DBD — tracker WebRTC encrypted\n[ZITHUB] Bitcoin+GitHub=Zitcoin — Main spawns ZitHub inside — MINT  PUSH ZITHUB  [ZITHUB] — single file — continuity Zitcoin+Zithub\n[ZITCOIN] Teens: MINT zit  PUSH ZITCOIN — proof-of-pimple —  — Bitcoin+GitHub awareness converges in Monstruo as Zitcoin!',verifyTitle:' VERIFY',lblA:'A:',lblB:'B:',compare:'[A==B]',lblFile:'File:',lblMan:'Man:',verify:'[VERIFY]',lblGen:'Gen:',gen:'[SHA256+ZIP]',btlog:'v0.1aaax — ZITHUB+ZITCOIN — Bitcoin+GitHub=Zitcoin — single file — resizable fixed — 3 SYM pages — 320px color',qrStatus:'QR offline'}
+};
+function applyLang(){
+var t=I18N[LANG];
+document.getElementById('LANG').textContent=t.langBtn;
+document.getElementById('const').textContent=t.constText;
+document.getElementById('SHARE').textContent=t.share;document.getElementById('SHARE').style.background='#0a3d9c';document.getElementById('SHARE').style.color='#fff';
+document.getElementById('SCAN').textContent=t.scan;document.getElementById('SCAN').style.borderColor='#0f0';document.getElementById('SCAN').style.color='#0f0';
+document.getElementById('JOIN').textContent=t.join;document.getElementById('JOIN').style.borderColor='#D4AF37';document.getElementById('JOIN').style.color='#D4AF37';
+document.getElementById('MINT').textContent=t.mint;document.getElementById('MINT').style.background='#D4AF37';document.getElementById('MINT').style.color='#000';
+document.getElementById('WRAP').textContent=t.wrap;document.getElementById('WRAP').style.background='#8B0000';document.getElementById('WRAP').style.color='#fff';
+document.getElementById('COLORTOG').textContent=COLOR_MODE?t.cOn:t.cOff;
+document.getElementById('info').textContent=t.info;
+document.getElementById('verifyTitle').textContent=t.verifyTitle;
+document.querySelector('.lblA').textContent=t.lblA;document.querySelector('.lblB').textContent=t.lblB;
+document.getElementById('COMPARE').textContent=t.compare;document.getElementById('COMPARE').style.background='#0a3d9c';document.getElementById('COMPARE').style.color='#fff';
+document.getElementById('lblFile').textContent=t.lblFile;document.getElementById('lblMan').textContent=t.lblMan;
+document.getElementById('VERIFY_HASH').textContent=t.verify;document.getElementById('lblGen').textContent=t.lblGen;document.getElementById('GEN_HASH').textContent=t.gen;
+document.getElementById('btlog').textContent=t.btlog;document.getElementById('qrstatus').textContent=t.qrStatus;
+}
+var Input={pos:0,value:'',update:function(){try{var a=document.getElementById('txtbefore');var b=document.getElementById('txtafter');if(a)a.textContent=Input.value.slice(0,Input.pos);if(b)b.textContent=Input.value.slice(Input.pos);}catch(e){}},set:function(v){Input.value=v;Input.pos=v.length;Input.update();Input.checkZit();},ins:function(ch){Input.value=Input.value.slice(0,Input.pos)+ch+Input.value.slice(Input.pos);Input.pos+=ch.length;Input.update();Input.checkZit();},del:function(){if(Input.pos>0){Input.value=Input.value.slice(0,Input.pos-1)+Input.value.slice(Input.pos);Input.pos--;Input.update();}},left:function(){if(Input.pos>0){Input.pos--;Input.update();}},right:function(){if(Input.pos<Input.value.length){Input.pos++;Input.update();}},checkZit:function(){if(Input.value.toLowerCase().indexOf('zit')!==-1){var log=document.getElementById('log');if(log&&!window._zitShown){window._zitShown=true;var div=document.createElement('div');div.className='e';div.style.color='#ffeb3b';div.style.border='1px solid #f00';div.textContent=' ZITCOIN MODE ON — Bitcoin+GitHub=Zitcoin — Monstruo spawns ZitHub — '+new Date().toISOString().slice(11,19);log.appendChild(div);log.scrollTop=log.scrollHeight;setTimeout(function(){window._zitShown=false;},3000);}}}};
+function getRows(){
+if(KB_MODE===0){
+if(SHIFT_ON){return [['1','2','3','4','5','6','7','8','9','0'],['Q','W','E','R','T','Y','U','I','O','P'],['A','S','D','F','G','H','J','K','L'],['SHIFT','Z','X','C','V','B','N','M','DEL'],['SYM','.',',','_','SPACE','<','>','SEND']];}
+else{return [['1','2','3','4','5','6','7','8','9','0'],['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['SHIFT','z','x','c','v','b','n','m','DEL'],['SYM','.',',','_','SPACE','<','>','SEND']];}
+}else if(KB_MODE===1){
+return [['1','2','3','/','@','#','$','%','&','0'],['[',']','{','}','(',')','<','>','|','*'],['+','-','_','=',';',':','!','?','"','\''],['SYM2','.',',','?','SPACE','<','>','SEND']];
+}else if(KB_MODE===2){
+return [['~','^','`','|','\\','_','-','+','=','°'],['¡','¿','€','£','¥','$','¢','§','©','®'],['á','é','í','ó','ú','ñ','ü','¿','¡','°'],['ABC','.',',','?','SPACE','<','>','SEND']];
+}else{return [['1','2','3','4','5','6','7','8','9','0'],['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['SHIFT','z','x','c','v','b','n','m','DEL'],['SYM','.',',','_','SPACE','<','>','SEND']];}
+}
+function buildKB(){
+var kb=document.getElementById('kb');if(!kb)return;kb.innerHTML='';
+var rows=getRows();
+for(var r=0;r<rows.length;r++){
+var dr=document.createElement('div');dr.className='kbrow';var row=rows[r];
+for(var c=0;c<row.length;c++){
+var lbl=row[c];var b=document.createElement('button');b.textContent=lbl;
+if(lbl==='SPACE')b.className='kwide';if(lbl==='SEND')b.className='kenter';if(lbl==='<'||lbl==='>')b.className='karrow';
+if(lbl==='SHIFT'&&SHIFT_ON){b.style.background='#D4AF37';b.style.color='#000';}
+(function(l,btn){
+function h(ev){ev.preventDefault();ev.stopPropagation();
+if(l==='SHIFT'){SHIFT_ON=!SHIFT_ON;buildKB();return;}
+if(l==='SYM'){KB_MODE=1;buildKB();return;}
+if(l==='SYM2'){KB_MODE=2;buildKB();return;}
+if(l==='ABC'){KB_MODE=0;SHIFT_ON=false;buildKB();return;}
+if(l==='DEL'){Input.del();return;}
+if(l==='<'){Input.left();return;}
+if(l==='>'){Input.right();return;}
+if(l==='SPACE'){Input.ins(' ');return;}
+if(l==='SEND'){var t=Input.value.trim();if(!t)return;Input.set('');try{var log=document.getElementById('log');var div=document.createElement('div');div.className='e';var ts=document.createElement('span');ts.className='ts';ts.textContent=new Date().toISOString().slice(11,19);div.appendChild(ts);var sp=document.createElement('span');sp.textContent=' '+t;div.appendChild(sp);log.appendChild(div);log.scrollTop=log.scrollHeight;}catch(e){}return;}
+Input.ins(l);
+if(KB_MODE===0&&SHIFT_ON){SHIFT_ON=false;setTimeout(buildKB,150);}
+}
+btn.addEventListener('touchstart',h,{passive:false});btn.addEventListener('mousedown',h);
+})(lbl,b);
+dr.appendChild(b);
+}
+kb.appendChild(dr);
+}
+}
+function timeTick(){try{var tc=document.getElementById('timecode');if(tc){var d=new Date();tc.textContent=('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)+':'+('0'+d.getSeconds()).slice(-2);}}catch(e){}setTimeout(timeTick,1000);}
+buildKB();timeTick();Input.set('');applyLang();
+var Zip={create:function(files){function crc32(buf){var t=[];for(var i=0;i<256;i++){var c=i;for(var j=0;j<8;j++)c=(c&1)?(0xEDB88320^(c>>>1)):(c>>>1);t[i]=c;}var crc=0xFFFFFFFF;for(var i=0;i<buf.length;i++)crc=(crc>>>8)^t[(crc^buf[i])&0xFF];return (crc^0xFFFFFFFF)>>>0;}function u8(s){return new TextEncoder().encode(s);}function u16(n){return [n&0xFF,(n>>8)&0xFF];}function u32(n){return [n&0xFF,(n>>8)&0xFF,(n>>16)&0xFF,(n>>24)&0xFF];}var fh=[];var ch=[];var off=0;for(var fi=0;fi<files.length;fi++){var f=files[fi];var name=u8(f.name);var data=f.data instanceof Uint8Array?f.data:u8(f.data);var crc=crc32(data);var lh=[];lh.push(...u32(0x04034b50));lh.push(...u16(20));lh.push(...u16(0));lh.push(...u16(0));lh.push(...u32(crc));lh.push(...u32(data.length));lh.push(...u32(data.length));lh.push(...u16(name.length));lh.push(...u16(0));var lb=new Uint8Array([...lh,...name]);var hp=new Uint8Array(lb.length+data.length);hp.set(lb,0);hp.set(data,lb.length);fh.push(hp);var ce=[];ce.push(...u32(0x02014b50));ce.push(...u16(20));ce.push(...u16(20));ce.push(...u16(0));ce.push(...u16(0));ce.push(...u32(crc));ce.push(...u32(data.length));ce.push(...u32(data.length));ce.push(...u16(name.length));ce.push(...u16(0));ce.push(...u16(0));ce.push(...u32(0));ce.push(...u32(off));var cb=new Uint8Array([...ce,...name]);ch.push(cb);off+=hp.length;}var co=off;var cs=0;for(var i=0;i<ch.length;i++)cs+=ch[i].length;var tot=co+cs+22;var out=new Uint8Array(tot);var pos=0;for(var i=0;i<fh.length;i++){out.set(fh[i],pos);pos+=fh[i].length;}for(var i=0;i<ch.length;i++){out.set(ch[i],pos);pos+=ch[i].length;}var eocd=[];eocd.push(...u32(0x06054b50));eocd.push(...u16(0));eocd.push(...u16(0));eocd.push(...u16(fh.length));eocd.push(...u16(fh.length));eocd.push(...u32(cs));eocd.push(...u32(co));eocd.push(...u16(0));out.set(eocd,pos);return out;}};
+async function sha256hex(buf){try{if(crypto.subtle){var d=await crypto.subtle.digest('SHA-256',buf);return [...new Uint8Array(d)].map(x=>('00'+x.toString(16)).slice(-2)).join('');}}catch(e){}var h=0;for(var i=0;i<buf.length;i++)h=(h*31+buf[i])>>>0;return h.toString(16);}
+function floyd(ctx,w,h){var img=ctx.getImageData(0,0,w,h);var d=img.data;for(var i=0;i<d.length;i+=4){var g=(d[i]+d[i+1]+d[i+2])/3;g=(g-128)*1.4+128;d[i]=d[i+1]=d[i+2]=g;}for(var y=0;y<h;y++){for(var x=0;x<w;x++){var idx=(y*w+x)*4;var old=d[idx];var ne=old>128?255:0;var err=old-ne;d[idx]=d[idx+1]=d[idx+2]=ne;if(x+1<w){d[idx+4]+=err*7/16;}if(x>0&&y+1<h){var i2=((y+1)*w+x-1)*4;d[i2]+=err*3/16;}if(y+1<h){var i3=((y+1)*w+x)*4;d[i3]+=err*5/16;}if(x+1<w&&y+1<h){var i4=((y+1)*w+x+1)*4;d[i4]+=err*1/16;}}}ctx.putImageData(img,0,0);}
+function qr(cvs,payload){var ctx=cvs.getContext('2d');var W=cvs.width;var sz=12;var cols=Math.floor(W/sz);ctx.fillStyle='#fff';ctx.fillRect(0,0,W,W);ctx.fillStyle='#000';var h=0;for(var i=0;i<payload.length;i++)h=(h*31+payload.charCodeAt(i))>>>0;for(var y=0;y<cols;y++){for(var x=0;x<cols;x++){if((x<7&&y<7)||(x>cols-8&&y<7)||(x<7&&y>cols-8))continue;var v=(h + x*131 + y*313 + payload.charCodeAt((x+y)%payload.length))%3;if(v==0)ctx.fillRect(x*sz,y*sz,sz,sz);}}floyd(ctx,W,W);ctx.fillStyle='#0a3d9c';ctx.fillRect(0,0,7*sz,7*sz);ctx.fillStyle='#fff';ctx.fillRect(sz,sz,5*sz,5*sz);ctx.fillStyle='#000';ctx.fillRect(2*sz,2*sz,3*sz,3*sz);ctx.fillStyle='#0a3d9c';ctx.fillRect(W-7*sz,0,7*sz,7*sz);ctx.fillStyle='#fff';ctx.fillRect(W-6*sz,sz,5*sz,5*sz);ctx.fillStyle='#000';ctx.fillRect(W-5*sz,2*sz,3*sz,3*sz);ctx.fillStyle='#0a3d9c';ctx.fillRect(0,W-7*sz,7*sz,7*sz);ctx.fillStyle='#fff';ctx.fillRect(sz,W-6*sz,5*sz,5*sz);ctx.fillStyle='#000';ctx.fillRect(2*sz,W-5*sz,3*sz,3*sz);}
+function getArr(){try{var z=JSON.parse(localStorage.getItem('zithub_v1')||'[]');if(z.length>0)return z;var k=JSON.parse(localStorage.getItem('kidhub_v1')||'[]');return k;}catch(e){try{return JSON.parse(localStorage.getItem('zithub_v1')||'[]');}catch(e2){return [];}}}
+function renderZithub(){
+var arr=getArr();
+var list=document.getElementById('zithubList');list.innerHTML='';
+var filtered=arr.filter(function(e){if(Z_FILTER==='all')return true;var t=(e.type||'').toLowerCase();if(Z_FILTER==='zithub')return t.indexOf('hub')!==-1||t.indexOf('kid')!==-1||t==='zithub';return t.indexOf('zit')!==-1;});
+document.getElementById('count').textContent=filtered.length+' / '+arr.length;
+document.getElementById('empty').style.display=filtered.length?'none':'block';
+for(var i=0;i<filtered.length;i++){
+var e=filtered[i];
+var div=document.createElement('div');var isZit=(e.type||'').toLowerCase().indexOf('zit')!==-1;div.className='card '+(isZit?'zit':'hub');
+var meta=document.createElement('div');meta.className='meta';
+meta.textContent=(isZit?' ZITCOIN ':' ZITHUB ')+e.hash+' — '+e.time.slice(11,19)+' — '+(e.lang||'');
+div.appendChild(meta);
+var txt=document.createElement('pre');txt.style.whiteSpace='pre-wrap';txt.style.fontSize='10px';txt.textContent=(e.text||'').slice(0,600);
+div.appendChild(txt);
+if(e.html){
+var h=document.createElement('div');h.innerHTML=e.html;
+var imgs=h.querySelectorAll('img');
+for(var j=0;j<Math.min(imgs.length,2);j++){div.appendChild(imgs[j].cloneNode());}
+}
+list.appendChild(div);
+}
+}
+function pushToHub(type){
+try{
+var log=document.getElementById('log');
+var html=log?log.innerHTML.slice(0,3000):'';
+var text=log?log.innerText.slice(0,1000):'';
+var entry={type:type,hash:Date.now().toString(16).slice(-7).toUpperCase(),time:new Date().toISOString(),text:text,html:html,lang:LANG,color:COLOR_MODE};
+var key='zithub_v1';
+var arr=JSON.parse(localStorage.getItem(key)||'[]');arr.unshift(entry);if(arr.length>200)arr=arr.slice(0,200);
+localStorage.setItem(key,JSON.stringify(arr));
+document.getElementById('genResult').textContent=(type==='zitcoin'?'ZITCOIN ':'ZITHUB ')+entry.hash+' pushed — hit [ZITHUB]';
+document.getElementById('btlog').textContent=(type==='zitcoin'?' ZITCOIN ':' ZITHUB ')+entry.hash+' — '+arr.length+' — Bitcoin+GitHub=Zitcoin';
+renderZithub();
+}catch(e){document.getElementById('genResult').textContent='Push fail: '+e;}
+}
+function openZithub(filter){
+Z_FILTER=filter||'zithub';
+var box=document.getElementById('zithubBox');box.style.display='flex';
+document.getElementById('zithubTitle').textContent=Z_FILTER==='zitcoin'?' ZITCOIN — Proof-of-Pimple — Bitcoin+GitHub=Zitcoin':' ZITHUB — Bitcoin+GitHub=Zitcoin — Monstruo spawns ZitHub — 0.1aaax';
+renderZithub();
+}
+document.addEventListener('DOMContentLoaded',function(){
+document.getElementById('LANG').addEventListener('click',function(){LANG=LANG==='es'?'en':'es';applyLang();});
+document.getElementById('COLORTOG').addEventListener('click',function(){COLOR_MODE=!COLOR_MODE;applyLang();});
+var tripaBtn=document.getElementById('TRIPA-BTN');var tripa=document.getElementById('tripa');if(tripaBtn){tripaBtn.addEventListener('click',function(){tripa.style.display=tripa.style.display==='block'?'none':'block';});}
+var qbox=document.getElementById('qrbox');var gold=document.getElementById('goldbar');var qc=document.getElementById('QRCLOSE');if(qc)qc.addEventListener('click',function(){qbox.style.display='none';if(gold)gold.style.width='0%';});
+var zbox=document.getElementById('zithubBox');var zc=document.getElementById('ZITHUB_CLOSE');if(zc)zc.addEventListener('click',function(){zbox.style.display='none';});
+document.getElementById('tabHub').addEventListener('click',function(){Z_FILTER='zithub';renderZithub();});
+document.getElementById('tabZit').addEventListener('click',function(){Z_FILTER='zitcoin';renderZithub();});
+document.getElementById('tabAll').addEventListener('click',function(){Z_FILTER='all';renderZithub();});
+document.getElementById('exportBtn').addEventListener('click',function(){var arr=getArr();var blob=new Blob([JSON.stringify(arr,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download='zithub-export-'+Date.now()+'.json';a.click();});
+document.getElementById('clearBtn').addEventListener('click',function(){if(confirm('Clear ZITHUB+ZITCOIN?')){localStorage.removeItem('zithub_v1');localStorage.removeItem('kidhub_v1');renderZithub();}});
+var pull=document.getElementById('pull');var kb=document.getElementById('kb');
+function onStart(e){var sy=e.touches?e.touches[0].clientY:e.clientY;var sh=kb.offsetHeight;function move(ev){var y=ev.touches?ev.touches[0].clientY:ev.clientY;var dy=sy-y;var nh=sh+dy;nh=Math.max(window.innerHeight*0.26,Math.min(window.innerHeight*0.70,nh));kb.style.height=nh+'px';ev.preventDefault();}function end(){window.removeEventListener('touchmove',move,{passive:false});window.removeEventListener('mousemove',move);window.removeEventListener('touchend',end);window.removeEventListener('mouseup',end);}window.addEventListener('touchmove',move,{passive:false});window.addEventListener('mousemove',move);window.addEventListener('touchend',end);window.addEventListener('mouseup',end);e.preventDefault();}
+if(pull){pull.addEventListener('touchstart',onStart,{passive:false});pull.addEventListener('mousedown',onStart);}
+document.getElementById('cmdline').addEventListener('click',function(e){if(kb.offsetHeight<80){kb.style.height='42vh';}});
+var camFile=document.getElementById('camFile');function openCam(){if(camFile)camFile.click();}
+var camTop=document.getElementById('CAM');var camBtn=document.getElementById('camBtn');if(camTop)camTop.addEventListener('click',openCam);if(camBtn)camBtn.addEventListener('click',openCam);
+if(camFile)camFile.addEventListener('change',function(){
+if(!this.files[0])return;var f=this.files[0];var r=new FileReader();
+r.onload=function(e){var img=new Image();img.onload=function(){
+var maxW=320;var c=document.createElement('canvas');c.width=Math.min(maxW,img.width);c.height=img.height*(c.width/img.width);var ctx=c.getContext('2d');ctx.drawImage(img,0,0,c.width,c.height);
+if(!COLOR_MODE){floyd(ctx,c.width,c.height);}
+var url=c.toDataURL(COLOR_MODE?'image/jpeg':'image/png', COLOR_MODE?0.35:1.0);
+try{var log=document.getElementById('log');var div=document.createElement('div');div.className='e';var ts=document.createElement('span');ts.className='ts';ts.textContent=new Date().toISOString().slice(11,19);div.appendChild(ts);var im=document.createElement('img');im.src=url;div.appendChild(im);log.appendChild(div);log.scrollTop=log.scrollHeight;document.getElementById('btlog').textContent=(COLOR_MODE?'COLOR low 320px ':'B/W ')+c.width+'x'+c.height+' '+(url.length/1024).toFixed(1)+'KB';}catch(err){}
+};img.src=e.target.result;};r.readAsDataURL(f);if(qbox)qbox.style.display='none';
+});
+var share=document.getElementById('SHARE');if(share)share.addEventListener('click',function(){var code='7DBD';var payload=code+'|'+Date.now();if(qbox){qbox.style.display='flex';}var cvs=document.getElementById('qrcanvas');if(cvs)qr(cvs,payload);var rc=document.getElementById('roomcode');if(rc)rc.textContent=code;var ru=document.getElementById('roomui');if(ru)ru.style.display='block';});
+var scan=document.getElementById('SCAN');if(scan)scan.addEventListener('click',function(){var sf=document.getElementById('scanFile');if(sf)sf.click();});
+var fs=document.getElementById('FS');if(fs)fs.addEventListener('click',function(){try{if(!document.fullscreenElement){document.documentElement.requestFullscreen();}else{document.exitFullscreen();}}catch(e){}});
+var hub=document.getElementById('ZITHUB');if(hub)hub.addEventListener('click',function(){openZithub('zithub');});
+var zit=document.getElementById('ZITCOIN');if(zit)zit.addEventListener('click',function(){openZithub('zitcoin');});
+var comp=document.getElementById('COMPARE');if(comp)comp.addEventListener('click',async function(){
+var fa=document.getElementById('fileA').files[0];var fb=document.getElementById('fileB').files[0];var res=document.getElementById('compareResult');
+if(!fa||!fb){res.textContent=LANG==='es'?'Selecciona A y B':'Select A and B';return;}
+var ba=await fa.arrayBuffer();var bb=await fb.arrayBuffer();
+var ha=await sha256hex(new Uint8Array(ba));var hb=await sha256hex(new Uint8Array(bb));
+if(ha===hb){res.textContent=' IDENTICOS';res.style.color='#0f0';}else{res.textContent=' DIFERENTES';res.style.color='#f00';}
+document.getElementById('hashDetails').textContent='A:'+ha.slice(0,16)+' B:'+hb.slice(0,16);
+});
+var vhash=document.getElementById('VERIFY_HASH');if(vhash)vhash.addEventListener('click',async function(){
+var f=document.getElementById('fileVerify').files[0];var mf=document.getElementById('fileManifest').files[0];var res=document.getElementById('verifyResult');var det=document.getElementById('hashDetails');
+if(!f){res.textContent=LANG==='es'?'Selecciona':'Select';return;}
+var buf=await f.arrayBuffer();var h=await sha256hex(new Uint8Array(buf));var expected='';if(mf){var txt=await mf.text();try{var j=JSON.parse(txt);expected=j.hash||j.sha256||txt.trim();}catch(e){expected=txt.trim();}}
+if(expected){if(h===expected||h.indexOf(expected)!==-1||expected.indexOf(h)!==-1){res.textContent=' GREEN CHECK';res.style.color='#0f0';}else{res.textContent=' RED X';res.style.color='#f00';}det.textContent='Calc:'+h+'\nExp:'+expected;}else{res.textContent=h.slice(0,12);res.style.color='#D4AF37';det.textContent=h;}
+});
+var gen=document.getElementById('GEN_HASH');if(gen)gen.addEventListener('click',async function(){
+var f=document.getElementById('fileGen').files[0];var out=document.getElementById('genResult');if(!f){out.textContent='Select';return;}
+var buf=await f.arrayBuffer();var h=await sha256hex(new Uint8Array(buf));var txt='File:'+f.name+'\nHash:'+h+'\n'+new Date().toISOString();
+var files=[];files.push({name:f.name,data:new Uint8Array(buf)});files.push({name:f.name+'.sha256.txt',data:txt});files.push({name:'manifest-'+h.slice(0,7)+'.json',data:JSON.stringify({file:f.name,hash:h,time:new Date().toISOString()},null,2)});
+var zipBytes=Zip.create(files);var blob=new Blob([zipBytes],{type:'application/zip'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=f.name+'-SHA256-'+h.slice(0,7)+'.zip';document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);out.textContent='ZIP '+h.slice(0,7);
+});
+var pk=document.getElementById('PUSH_HUB');if(pk)pk.addEventListener('click',function(){pushToHub('zithub');});
+var pz=document.getElementById('PUSH_ZIT');if(pz)pz.addEventListener('click',function(){pushToHub('zitcoin');});
+var wrap=document.getElementById('WRAP');if(wrap)wrap.addEventListener('click',async function(){
+var log=document.getElementById('log');var txt='WRAP - NO ABRIR / DO NOT OPEN - '+new Date().toISOString()+'\n'+(log?log.innerText.slice(0,1200):'');
+var h=await sha256hex(new TextEncoder().encode(txt));
+var htmlCourt='<!DOCTYPE html><html><head><meta charset=utf-8><title>WRAP '+h.slice(0,7)+'</title><style>body{background:#000;color:#D4AF37;font-family:monospace;padding:10px}#banner{background:#0a3d9c;color:#fff;padding:8px;text-align:center;font-weight:bold}img{max-width:90%;border:1px solid #333}</style></head><body><div id=banner>'+(LANG==='es'?'WRAP - NO ABRIR':'WRAP - DO NOT OPEN')+' - '+h+'</div><pre>'+txt+'</pre><div>'+(log?log.innerHTML:'')+'</div></body></html>';
+var files=[];files.push({name:'index.html',data:htmlCourt});files.push({name:'WRAP-'+h.slice(0,7)+'.json',data:JSON.stringify({hash:h,time:new Date().toISOString()},null,2)});
+var zipBytes=Zip.create(files);var blob=new Blob([zipBytes],{type:'application/zip'});var url=URL.createObjectURL(blob);var a=document.createElement('a');a.href=url;a.download=(LANG==='es'?'WRAP-NO-ABRIR-':'WRAP-DO-NOT-OPEN-')+h.slice(0,7)+'.zip';document.body.appendChild(a);a.click();setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+document.getElementById('btlog').textContent='WRAP '+h.slice(0,7)+'.zip '+h;
+});
+});
+</script></body></html>
