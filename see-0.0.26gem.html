@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>see-0.0.26gem</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:system-ui,sans-serif;background:#0b0e12;color:#cfe3ff;display:flex;flex-direction:column;overflow:hidden}
+header{position:fixed;top:0;left:0;right:0;height:44px;background:#3b5998;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 10px;z-index:20}
+#ver{font-size:13px}
+#clock{font-variant-numeric:tabular-nums;background:rgba(0,0,0,.28);border-radius:12px;padding:4px 8px;min-width:104px;text-align:center}
+#sw{border:1px solid rgba(255,255,255,.7);border-radius:12px;padding:4px 9px;font-size:12px;background:transparent;color:#fff}
+#gpsLine{position:fixed;top:44px;left:0;right:0;min-height:28px;background:#1b2638;color:#9ec0e6;display:flex;align-items:center;justify-content:center;text-align:center;font-size:12px;padding:4px 8px;z-index:19}
+#gpsLine.on{background:#0a84ff;color:#fff}
+main{margin-top:72px;flex:1;display:flex;min-height:0}
+#left{flex:1 1 auto;min-width:72px;overflow:auto;padding:8px 8px 150px;background:#0b0e12}
+#splitter{flex:0 0 12px;width:12px;background:#2d9bf0;touch-action:none;z-index:6}
+#right{flex:0 0 128px;min-width:72px;overflow:auto;padding:8px 6px 150px;background:#11161f;display:flex;flex-direction:column;gap:8px}
+#bottomBar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#121821;border-top:1px solid #2d9bf0;display:flex;flex-wrap:wrap;gap:6px;padding:8px 8px 14px}
+.row,.row2{flex:1 1 100%;display:flex;gap:6px;align-items:center}
+.row2{flex-wrap:wrap}
+#inp{flex:1;min-width:0;height:40px;border-radius:8px;border:1px solid #2a3a52;background:#0e1520;color:#d7e8ff;padding:0 8px;font-size:16px}
+.btn{background:#1c2a41;color:#cfe3ff;border:1px solid #2a3a52;border-radius:12px;padding:8px 10px;font-size:14px}
+.btn.mint{background:#0a84ff;color:#fff;font-weight:700;border-color:#0a84ff}
+.item{border-left:2px solid #2a3a52;padding:6px 8px;margin:6px 0;background:rgba(255,255,255,.04);border-radius:4px;overflow-wrap:anywhere;word-break:break-word;font-size:15px;line-height:1.35}
+.hash-line{font-family:ui-monospace,monospace;font-size:12px;overflow-wrap:anywhere;word-break:break-all;opacity:.9}
+.thumb{position:relative;border:1px solid #2a3a52;border-radius:6px;overflow:hidden;background:#0e1420}
+.thumb img{width:100%;max-height:320px;object-fit:contain;display:block;background:#0a0e15}
+.meta{font-size:11px;padding:4px;overflow-wrap:anywhere}
+.del{position:absolute;top:2px;right:2px;background:rgba(0,0,0,.75);color:#fff;border-radius:10px;padding:2px 7px}
+#ts{display:none;position:fixed;inset:0;z-index:100;background:#070b12;color:#cfe3ff;overflow:auto;padding:14px 12px 28px}
+#tslog{max-height:24vh;overflow:auto;font-size:12px;background:#0e1520;border-radius:8px;padding:6px;margin:8px 0}
+textarea{width:100%;min-height:88px;background:#0e1520;color:#d7e8ff;border:1px solid #2a3a52;border-radius:8px;font-size:12px}
+.filepick{position:absolute;left:-200px;width:1px;height:1px;opacity:0}
+#jserr{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;color:#b00020;padding:8px;white-space:pre-wrap;font-size:13px}
+html.light body,html.light #left{background:#f4f7fb;color:#15202b}
+html.light #right{background:#e8eef7;color:#15202b}
+html.light #bottomBar{background:#eef2f7}
+html.light .btn{background:#fff;color:#15202b}
+html.light #inp,html.light textarea{background:#fff;color:#15202b}
+a{color:#7ab6ff}
+</style>
+</head>
+<body>
+<header>
+  <div id="ver">see-0.0.26gem</div>
+  <div id="clock">00:00:00.00</div>
+  <button type="button" id="sw">SWITCH</button>
+</header>
+<div id="gpsLine">SHELL OK — tap for GPS — tap the clock for tools</div>
+<main>
+  <div id="left"><div id="chain"><div class="item" id="initialHint">see-0.0.26gem is the app. The clock should be moving, the blue bar should sit at the bottom, and the blue splitter should drag. First note you type becomes the title. Photos stay on the right.</div></div></div>
+  <div id="splitter"></div>
+  <div id="right"></div>
+</main>
+<div id="bottomBar">
+  <div class="row">
+    <label for="fi" class="btn">OPEN</label>
+    <input id="fi" class="filepick" type="file" multiple accept="*/*">
+    <input id="inp" placeholder="WHO / WHAT / WHERE + Enter" autocomplete="off" enterkeyhint="done">
+  </div>
+  <div class="row2">
+    <button type="button" class="btn" id="roomBtn">ROOM</button>
+    <button type="button" class="btn" id="wipe">WIPE</button>
+    <button type="button" class="btn" id="full">FULL</button>
+    <button type="button" class="btn mint" id="mint">MINT</button>
+  </div>
+</div>
+<div id="ts">
+  <h3>Tools</h3>
+  <div id="tslog"></div>
+  <p>Hash covers notes plus the SHA-256 of each file. VERIFY checks the screen against the last mint. GENERATE only previews the next mint. Photos are not restored after a reload; the zip is the record.</p>
+  <p>Room: same Wi-Fi or hotspot. A creates and copies the offer. B pastes it, joins, copies the answer. A pastes the answer and accepts. Chrome may hide phone addresses as .local names, so the room can fail even when this code is fine. There is no camera QR in this build.</p>
+  <button type="button" class="btn" id="tsOpen">OPEN PHOTOS</button>
+  <button type="button" class="btn" id="tsGps">ENABLE GPS</button>
+  <button type="button" class="btn" id="tsBlob">BLOB ON</button>
+  <button type="button" class="btn" id="verifyHash">VERIFY HASH</button>
+  <button type="button" class="btn" id="genHash">GENERATE HASH</button>
+  <button type="button" class="btn" id="createRoom">CREATE ROOM</button>
+  <button type="button" class="btn" id="joinRoom">JOIN pasted offer</button>
+  <button type="button" class="btn" id="acceptAnswer">ACCEPT pasted answer</button>
+  <button type="button" class="btn" id="sendPeerBtn">SEND note to peer</button>
+  <button type="button" class="btn" id="copySdp">COPY SDP box</button>
+  <textarea id="sdpOut" readonly placeholder="Offer or answer appears here"></textarea>
+  <textarea id="sdpIn" placeholder="Paste the other phone's offer or answer here"></textarea>
+  <button type="button" class="btn" id="tsClose">CLOSE</button>
+</div>
+<script>
+(function () {
+  "use strict";
+  var VER = "see-0.0.26gem";
+  var clockEl = document.getElementById("clock");
+  var gpsLine = document.getElementById("gpsLine");
+  var chainEl = document.getElementById("chain");
+  var rightEl = document.getElementById("right");
+  var tslogEl = document.getElementById("tslog");
+  var items = [];
+  var evs = [];
+  var curGpsVal = "";
+  var bestAcc = Infinity;
+  var watchId = null;
+  var pc = null;
+  var dc = null;
+  var crcTable = null;
+  var light = false;
+
+  window.onerror = function (msg, src, line) {
+    var p = document.getElementById("jserr");
+    if (!p) {
+      p = document.createElement("pre");
+      p.id = "jserr";
+      document.body.appendChild(p);
+    }
+    p.textContent = "JS ERR line " + line + ": " + msg;
+  };
+
+  function z2(n) { return String(n).padStart(2, "0"); }
+  function updateClock() {
+    var d = new Date();
+    if (clockEl) {
+      clockEl.textContent = z2(d.getHours()) + ":" + z2(d.getMinutes()) + ":" + z2(d.getSeconds()) + "." + z2(Math.floor(d.getMilliseconds() / 10));
+    }
+    setTimeout(updateClock, 80);
+  }
+  updateClock();
+
+  function logTS(m) {
+    var d = document.createElement("div");
+    d.textContent = String(m);
+    tslogEl.appendChild(d);
+    tslogEl.scrollTop = tslogEl.scrollHeight;
+  }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c];
+    });
+  }
+  function hex(buf) {
+    return Array.from(new Uint8Array(buf)).map(function (b) { return b.toString(16).padStart(2, "0"); }).join("");
+  }
+  function requireCrypto() {
+    if (!window.crypto || !crypto.subtle) throw new Error("crypto.subtle missing in this view");
+  }
+  async function sha256Str(str) {
+    requireCrypto();
+    return hex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)));
+  }
+  async function sha256Bytes(u8) {
+    requireCrypto();
+    return hex(await crypto.subtle.digest("SHA-256", u8));
+  }
+  function buildCanonicalChainStr(prevHash) {
+    var p = prevHash != null ? prevHash : (localStorage.getItem("see_prev") || "GENESIS");
+    var a = items.map(function (i) { return i.ts + "|" + i.t + "|" + (i.gps || ""); }).join("||");
+    var b = evs.map(function (e) { return e.name + "|" + (e.size || 0) + "|" + e.ts + "|" + (e.gps || "") + "|" + (e.sha || ""); }).join("||");
+    return a + "||" + b + "||" + p + "||" + (curGpsVal || "") + "||" + VER;
+  }
+  function goldOf(hashHex) {
+    var strength = parseInt(hashHex.slice(0, 2), 16);
+    return { strength: strength, pct: (strength / 255 * 100).toFixed(1), high: strength >= 128 };
+  }
+  function dropHint() {
+    var h = document.getElementById("initialHint");
+    if (h) h.remove();
+  }
+  function paintNote(obj) {
+    var div = document.createElement("div");
+    div.className = "item";
+    var b = document.createElement("b");
+    b.textContent = new Date(obj.ts).toLocaleTimeString();
+    div.appendChild(b);
+    div.appendChild(document.createTextNode(" " + obj.t));
+    if (obj.gps) {
+      var g = document.createElement("div");
+      g.className = "hash-line";
+      g.textContent = obj.gps;
+      div.appendChild(g);
+    }
+    chainEl.appendChild(div);
+    chainEl.parentNode.scrollTop = chainEl.parentNode.scrollHeight;
+  }
+  function addNote(t) {
+    dropHint();
+    var obj = { t: t, ts: Date.now(), gps: curGpsVal || "" };
+    items.push(obj);
+    paintNote(obj);
+    localStorage.setItem("see_chain", JSON.stringify(items));
+  }
+  function u8ToBase64(u8) {
+    var binary = "";
+    var chunk = 0x8000;
+    for (var i = 0; i < u8.length; i += chunk) {
+      binary += String.fromCharCode.apply(null, u8.subarray(i, i + chunk));
+    }
+    return btoa(binary);
+  }
+  function makeCRC() {
+    var t = new Uint32Array(256);
+    for (var n = 0; n < 256; n++) {
+      var c = n;
+      for (var k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      t[n] = c >>> 0;
+    }
+    return t;
+  }
+  function crc32(data) {
+    if (!crcTable) crcTable = makeCRC();
+    var c = 0xFFFFFFFF;
+    for (var i = 0; i < data.length; i++) c = crcTable[(c ^ data[i]) & 255] ^ (c >>> 8);
+    return (c ^ 0xFFFFFFFF) >>> 0;
+  }
+  function u16(n) { return Uint8Array.of(n & 255, (n >>> 8) & 255); }
+  function u32(n) { return Uint8Array.of(n & 255, (n >>> 8) & 255, (n >>> 16) & 255, (n >>> 24) & 255); }
+  function cat(parts) {
+    var n = 0;
+    for (var i = 0; i < parts.length; i++) n += parts[i].length;
+    var out = new Uint8Array(n);
+    var o = 0;
+    for (var j = 0; j < parts.length; j++) { out.set(parts[j], o); o += parts[j].length; }
+    return out;
+  }
+  function makeZip(files) {
+    var locals = [];
+    var centrals = [];
+    var offset = 0;
+    for (var i = 0; i < files.length; i++) {
+      var name = new TextEncoder().encode(files[i].name);
+      var data = files[i].data;
+      var crc = crc32(data);
+      var local = cat([u32(0x04034b50), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0), name, data]);
+      locals.push(local);
+      centrals.push(cat([u32(0x02014b50), u16(20), u16(20), u16(0), u16(0), u16(0), u16(0), u32(crc), u32(data.length), u32(data.length), u16(name.length), u16(0), u16(0), u16(0), u16(0), u32(0), u32(offset), name]));
+      offset += local.length;
+    }
+    var central = cat(centrals);
+    var end = cat([u32(0x06054b50), u16(0), u16(0), u16(files.length), u16(files.length), u32(central.length), u32(offset), u16(0)]);
+    return cat(locals.concat([central, end]));
+  }
+  async function inflateRaw(u8) {
+    if (typeof DecompressionStream !== "function") throw new Error("this browser cannot inflate zips");
+    var ds = new DecompressionStream("deflate-raw");
+    var w = ds.writable.getWriter();
+    await w.write(u8);
+    await w.close();
+    return new Uint8Array(await new Response(ds.readable).arrayBuffer());
+  }
+  async function loadZip(u8) {
+    var e = -1;
+    var min = Math.max(0, u8.length - 22 - 65535);
+    for (var i = u8.length - 22; i >= min; i--) {
+      if (u8[i] === 0x50 && u8[i + 1] === 0x4B && u8[i + 2] === 0x05 && u8[i + 3] === 0x06) { e = i; break; }
+    }
+    if (e < 0) throw new Error("not a zip");
+    var dv = new DataView(u8.buffer, u8.byteOffset, u8.byteLength);
+    var count = dv.getUint16(e + 10, true);
+    var off = dv.getUint32(e + 16, true);
+    var out = [];
+    for (var n = 0; n < count; n++) {
+      if (off + 46 > u8.length || dv.getUint32(off, true) !== 0x02014b50) break;
+      var method = dv.getUint16(off + 10, true);
+      var compSize = dv.getUint32(off + 20, true);
+      var nameLen = dv.getUint16(off + 28, true);
+      var extraLen = dv.getUint16(off + 30, true);
+      var commentLen = dv.getUint16(off + 32, true);
+      var localOff = dv.getUint32(off + 42, true);
+      var name = new TextDecoder().decode(u8.subarray(off + 46, off + 46 + nameLen));
+      if (localOff + 30 > u8.length) throw new Error("bad local header");
+      var lName = dv.getUint16(localOff + 26, true);
+      var lExtra = dv.getUint16(localOff + 28, true);
+      var start = localOff + 30 + lName + lExtra;
+      if (start + compSize > u8.length) throw new Error("truncated " + name);
+      var data = u8.slice(start, start + compSize);
+      if (method === 8) data = await inflateRaw(data);
+      else if (method !== 0) throw new Error("zip method " + method);
+      out.push({ name: name, data: data });
+      off += 46 + nameLen + extraLen + commentLen;
+    }
+    return out;
+  }
+  function safeName(file, isImage) {
+    var base = String(file.name || "file").replace(/[^a-z0-9_.-]/gi, "_").slice(0, 80);
+    return "evidence/" + (isImage ? "img_" : "file_") + Date.now() + "_" + base;
+  }
+  function cardFor(rec, url) {
+    var div = document.createElement("div");
+    div.className = "thumb";
+    if (url) {
+      var img = document.createElement("img");
+      img.src = url;
+      img.alt = "";
+      div.appendChild(img);
+    } else {
+      var icon = document.createElement("div");
+      icon.className = "meta";
+      icon.textContent = rec.isImage ? "image" : "file";
+      div.appendChild(icon);
+    }
+    var meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = (rec.originalName || rec.name) + " — " + Math.round((rec.size || 0) / 1024) + "KB";
+    div.appendChild(meta);
+    if (rec.textPreview) {
+      var pre = document.createElement("div");
+      pre.className = "meta";
+      pre.textContent = rec.textPreview.slice(0, 180);
+      div.appendChild(pre);
+    }
+    var del = document.createElement("div");
+    del.className = "del";
+    del.textContent = "x";
+    del.onclick = function () {
+      if (url) URL.revokeObjectURL(url);
+      div.remove();
+      evs = evs.filter(function (v) { return v !== rec; });
+    };
+    div.appendChild(del);
+    rightEl.appendChild(div);
+  }
+  async function addEvidence(file, raw, isImage) {
+    var rec = {
+      name: safeName(file, isImage),
+      originalName: file.name || "file",
+      data: raw,
+      size: raw.length,
+      ts: Date.now(),
+      gps: curGpsVal || "",
+      sha: await sha256Bytes(raw),
+      isImage: !!isImage
+    };
+    var url = "";
+    if (isImage) {
+      try {
+        var bitmap = await createImageBitmap(file);
+        var w = bitmap.width, h = bitmap.height, max = 1024;
+        if (w >= h && w > max) { h = Math.round(h * max / w); w = max; }
+        else if (h > max) { w = Math.round(w * max / h); h = max; }
+        var canvas = document.createElement("canvas");
+        canvas.width = w; canvas.height = h;
+        canvas.getContext("2d").drawImage(bitmap, 0, 0, w, h);
+        if (bitmap.close) bitmap.close();
+        var blob = await new Promise(function (res) { canvas.toBlob(res, "image/jpeg", 0.62); });
+        if (!blob) throw new Error("no thumb");
+        rec.thumbB64 = u8ToBase64(new Uint8Array(await blob.arrayBuffer()));
+        url = URL.createObjectURL(file);
+      } catch (err) {
+        rec.isImage = false;
+        logTS("thumb failed, kept file: " + err.message);
+      }
+    } else {
+      try { rec.textPreview = new TextDecoder().decode(raw.subarray(0, 500)); } catch (e) { rec.textPreview = ""; }
+    }
+    evs.push(rec);
+    cardFor(rec, url);
+    logTS("added " + rec.originalName + " " + rec.sha.slice(0, 8));
+  }
+  async function handleFiles(list) {
+    for (var i = 0; i < list.length; i++) {
+      var file = list[i];
+      if (file.size > 12 * 1024 * 1024) { logTS("skipped over 12MB: " + file.name); continue; }
+      var raw = new Uint8Array(await file.arrayBuffer());
+      if (/\.zip$/i.test(file.name)) {
+        try {
+          var entries = await loadZip(raw);
+          var man = null;
+          for (var j = 0; j < entries.length; j++) {
+            if (/(^|\/)manifest\.json$/i.test(entries[j].name)) {
+              try { man = JSON.parse(new TextDecoder().decode(entries[j].data)); } catch (e) { logTS("manifest unreadable"); }
+            }
+          }
+          if (man && man.chainStr && man.hash) {
+            var got = await sha256Str(man.chainStr);
+            logTS(got === man.hash ? "ZIP HASH MATCH" : "ZIP HASH MISMATCH");
+          } else logTS("zip has no sealed chainStr");
+          for (var k = 0; k < entries.length; k++) {
+            var en = entries[k];
+            if (!/^evidence\//i.test(en.name) || /\/$/.test(en.name)) continue;
+            var img = /\.(jpg|jpeg|png|webp|gif)$/i.test(en.name);
+            var b = new Blob([en.data], { type: img ? "image/jpeg" : "application/octet-stream" });
+            var f = new File([b], en.name.split("/").pop(), { type: b.type });
+            await addEvidence(f, en.data, img);
+          }
+          logTS("opened zip, old notes were not imported");
+        } catch (err) { logTS("ZIP " + err.message); }
+        continue;
+      }
+      var isImage = /^image\//.test(file.type) || /\.(jpg|jpeg|png|webp|gif|heic)$/i.test(file.name);
+      await addEvidence(file, raw, isImage);
+    }
+  }
+  function enableGps() {
+    if (!navigator.geolocation) { logTS("no GPS"); return; }
+    function apply(pos) {
+      var acc = pos.coords.accuracy;
+      var v = pos.coords.latitude.toFixed(6) + "," + pos.coords.longitude.toFixed(6);
+      gpsLine.textContent = "GPS " + v + " ±" + Math.round(acc) + "m" + (acc > 50 ? " coarse" : "");
+      gpsLine.classList.add("on");
+      if (!curGpsVal || acc <= 50 || (acc <= bestAcc && bestAcc > 50)) {
+        curGpsVal = v;
+        bestAcc = Math.min(bestAcc, acc);
+      }
+    }
+    navigator.geolocation.getCurrentPosition(apply, function (err) { logTS("GPS " + err.message); }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
+    if (watchId != null) navigator.geolocation.clearWatch(watchId);
+    watchId = navigator.geolocation.watchPosition(apply, function () {}, { enableHighAccuracy: true, maximumAge: 5000 });
+  }
+  function timelineDoc(hash, parent) {
+    var g = goldOf(hash);
+    var title = (items[0] && items[0].t || "S.E.E.").slice(0, 80);
+    var from = items[0] ? new Date(items[0].ts).toLocaleString() : "";
+    var to = items.length ? new Date(items[items.length - 1].ts).toLocaleString() : "";
+    var pics = evs.map(function (e) {
+      var img = "";
+      if (e.isImage && e.thumbB64 && /^[A-Za-z0-9+/=]+$/.test(e.thumbB64)) {
+        img = '<img alt="" src="data:image/jpeg;base64,' + e.thumbB64 + '">';
+      }
+      var prev = e.textPreview ? "<pre>" + esc(e.textPreview.slice(0, 500)) + "</pre>" : "";
+      return "<figure><figcaption>" + esc(e.originalName || e.name) + " " + esc(e.sha || "") + "</figcaption>" + img + prev + "</figure>";
+    }).join("");
+    var notes = items.map(function (i) {
+      return "<p><b>" + esc(i.t) + "</b><br><small>" + esc(new Date(i.ts).toLocaleString()) + " " + esc(i.gps || "") + "</small></p>";
+    }).join("");
+    return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"
+      + esc(title) + "</title><style>body{margin:0;font-family:sans-serif;background:#f5f5f5;color:#111}header{background:#3b5998;color:#fff;padding:12px}main{padding:12px}img{max-width:100%;height:auto}p,figcaption,pre{overflow-wrap:anywhere;white-space:pre-wrap}</style></head><body><header>"
+      + esc(title) + "</header><main><p>" + esc(from) + " to " + esc(to) + "</p><p>GPS " + esc(curGpsVal || "none") + "<br>SHA-256 " + esc(hash) + "<br>first-byte " + g.strength + "/255 (" + g.pct + "%) " + (g.high ? "HIGH" : "LOW") + "<br>prev " + esc(String(parent).slice(0, 16)) + "</p>"
+      + pics + notes + "<p>k1m=0 AGPL-3.0 VERI SUMUS</p></main></body></html>";
+  }
+  async function mint() {
+    if (!items.length && !evs.length) { alert("Add a note or a photo first"); return; }
+    var parent = localStorage.getItem("see_prev") || "GENESIS";
+    var chainStr = buildCanonicalChainStr(parent);
+    var hash = await sha256Str(chainStr);
+    var html = timelineDoc(hash, parent);
+    var files = [
+      { name: "index.html", data: new TextEncoder().encode(html) },
+      { name: "manifest.json", data: new TextEncoder().encode(JSON.stringify({ ver: VER, hash: hash, prev: parent, chainStr: chainStr, gps: curGpsVal || "", items: items, files: evs.map(function (e) { return { name: e.name, sha: e.sha, size: e.size }; }) }, null, 2)) },
+      { name: "SEIGNIORAGE.txt", data: new TextEncoder().encode("k1m=0\nM0=0\nAGPL-3.0\nVERI SUMUS\n") }
+    ];
+    for (var i = 0; i < evs.length; i++) files.push({ name: evs[i].name, data: evs[i].data });
+    var zip = new Blob([makeZip(files)], { type: "application/zip" });
+    var name = "SEE-" + hash.slice(0, 4).toUpperCase() + "-" + Date.now() + ".zip";
+    var file = new File([zip], name, { type: "application/zip" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [file] })) await navigator.share({ files: [file], title: name });
+      else throw new Error("no share");
+    } catch (err) {
+      if (err && err.name === "AbortError") { logTS("share cancelled"); return; }
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(zip);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    localStorage.setItem("see_mint_parent", parent);
+    localStorage.setItem("see_last_hash", hash);
+    localStorage.setItem("see_last_chain", chainStr);
+    localStorage.setItem("see_prev", hash);
+    var htmlUrl = URL.createObjectURL(new Blob([html], { type: "text/html" }));
+    var row = document.createElement("div");
+    row.className = "item";
+    var link = document.createElement("a");
+    link.href = htmlUrl;
+    link.target = "_blank";
+    link.textContent = "OPEN MINTED TIMELINE";
+    row.appendChild(link);
+    var line = document.createElement("div");
+    line.className = "hash-line";
+    line.textContent = name + " " + hash;
+    row.appendChild(line);
+    chainEl.appendChild(row);
+    logTS("minted " + hash);
+  }
+  async function generateHash() {
+    var parent = localStorage.getItem("see_prev") || "GENESIS";
+    var h = await sha256Str(buildCanonicalChainStr(parent));
+    var g = goldOf(h);
+    logTS("PREVIEW " + h + " first-byte " + g.strength + "/255");
+    var div = document.createElement("div");
+    div.className = "item";
+    div.textContent = "PREVIEW " + h;
+    chainEl.appendChild(div);
+  }
+  async function verifyHash() {
+    var stored = localStorage.getItem("see_last_hash");
+    if (!stored) { logTS("nothing minted in this version yet"); return; }
+    var parent = localStorage.getItem("see_mint_parent") || "GENESIS";
+    var h = await sha256Str(buildCanonicalChainStr(parent));
+    logTS(h === stored ? "SCREEN MATCHES LAST MINT" : "SCREEN DOES NOT MATCH LAST MINT");
+    logTS(h);
+  }
+  function closePc() {
+    try { if (dc) dc.close(); } catch (e) {}
+    try { if (pc) pc.close(); } catch (e) {}
+    dc = null; pc = null;
+  }
+  function waitIce(conn) {
+    return new Promise(function (res) {
+      if (conn.iceGatheringState === "complete") return res();
+      var t = setTimeout(res, 4000);
+      conn.addEventListener("icegatheringstatechange", function () {
+        if (conn.iceGatheringState === "complete") { clearTimeout(t); res(); }
+      });
+    });
+  }
+  function wireDc(ch) {
+    ch.onopen = function () { logTS("ROOM OPEN"); gpsLine.textContent = "ROOM OPEN " + (curGpsVal || ""); };
+    ch.onmessage = function (ev) {
+      var text = String(ev.data || "");
+      try { var m = JSON.parse(text); if (m && m.t) text = String(m.t); } catch (e) {}
+      addNote("[peer] " + text);
+    };
+    ch.onclose = function () { logTS("ROOM CLOSED"); };
+  }
+  function cleanSdp(s) { return String(s || "").trim().replace(/^(OFFER|ANSWER):\s*/i, ""); }
+  async function createRoom() {
+    closePc();
+    pc = new RTCPeerConnection({ iceServers: [] });
+    dc = pc.createDataChannel("see-chat");
+    wireDc(dc);
+    var offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+    await waitIce(pc);
+    document.getElementById("sdpOut").value = pc.localDescription.sdp;
+    logTS("offer ready — copy it to the other phone");
+  }
+  async function joinRoom() {
+    var sdp = cleanSdp(document.getElementById("sdpIn").value);
+    if (sdp.indexOf("v=0") < 0) { logTS("paste an offer first"); return; }
+    closePc();
+    pc = new RTCPeerConnection({ iceServers: [] });
+    pc.ondatachannel = function (e) { dc = e.channel; wireDc(dc); };
+    await pc.setRemoteDescription({ type: "offer", sdp: sdp });
+    var answer = await pc.createAnswer();
+    await pc.setLocalDescription(answer);
+    await waitIce(pc);
+    document.getElementById("sdpOut").value = pc.localDescription.sdp;
+    logTS("answer ready — copy it back to the first phone");
+  }
+  async function acceptAnswer() {
+    var sdp = cleanSdp(document.getElementById("sdpIn").value);
+    if (!pc) { logTS("create a room first"); return; }
+    if (sdp.indexOf("v=0") < 0) { logTS("paste an answer first"); return; }
+    await pc.setRemoteDescription({ type: "answer", sdp: sdp });
+    logTS("answer set — wait for ROOM OPEN");
+  }
+  function sendPeer() {
+    var text = document.getElementById("inp").value.trim();
+    if (!text) return;
+    if (!dc || dc.readyState !== "open") { logTS("room is not open"); return; }
+    dc.send(JSON.stringify({ type: "chat", t: text, gps: curGpsVal || "" }));
+    addNote("[me] " + text);
+    document.getElementById("inp").value = "";
+  }
+  function openTS() { document.getElementById("ts").style.display = "block"; }
+  function bindSplitter() {
+    var sp = document.getElementById("splitter");
+    var left = document.getElementById("left");
+    var right = document.getElementById("right");
+    var main = document.querySelector("main");
+    var drag = false;
+    function moveTo(clientX) {
+      var rect = main.getBoundingClientRect();
+      var pos = clientX - rect.left;
+      if (pos < 72) pos = 72;
+      if (pos > rect.width - 72) pos = rect.width - 72;
+      left.style.flex = "0 0 " + pos + "px";
+      right.style.flex = "0 0 " + (rect.width - pos - 12) + "px";
+    }
+    sp.addEventListener("pointerdown", function (e) {
+      drag = true;
+      try { sp.setPointerCapture(e.pointerId); } catch (err) {}
+      e.preventDefault();
+    });
+    sp.addEventListener("pointermove", function (e) { if (drag) moveTo(e.clientX); });
+    sp.addEventListener("pointerup", function () { drag = false; });
+    sp.addEventListener("pointercancel", function () { drag = false; });
+    sp.addEventListener("touchstart", function (e) { drag = true; e.preventDefault(); }, { passive: false });
+    sp.addEventListener("touchmove", function (e) { if (!drag) return; e.preventDefault(); moveTo(e.touches[0].clientX); }, { passive: false });
+    sp.addEventListener("touchend", function () { drag = false; });
+  }
+  function boot() {
+    ["clock", "bottomBar", "splitter", "left", "right", "mint", "inp", "chain"].forEach(function (id) {
+      if (!document.getElementById(id)) throw new Error("missing #" + id);
+    });
+    if (localStorage.getItem("see_ver") !== VER) {
+      ["see_chain", "see_prev", "see_last_hash", "see_mint_parent", "see_last_chain"].forEach(function (k) { localStorage.removeItem(k); });
+      localStorage.setItem("see_ver", VER);
+    }
+    try {
+      var saved = JSON.parse(localStorage.getItem("see_chain") || "[]");
+      if (Array.isArray(saved)) {
+        saved.forEach(function (it) {
+          if (!it || !it.t) return;
+          items.push({ t: String(it.t), ts: Number(it.ts) || Date.now(), gps: String(it.gps || "") });
+          paintNote(items[items.length - 1]);
+        });
+        if (items.length) dropHint();
+      }
+    } catch (e) { logTS("could not restore notes"); }
+    if (localStorage.getItem("see_light") === "1") {
+      light = true;
+      document.documentElement.classList.add("light");
+    }
+    document.getElementById("sw").onclick = function () {
+      light = !light;
+      document.documentElement.classList.toggle("light", light);
+      localStorage.setItem("see_light", light ? "1" : "0");
+    };
+    clockEl.onclick = openTS;
+    document.getElementById("roomBtn").onclick = openTS;
+    document.getElementById("tsClose").onclick = function () { document.getElementById("ts").style.display = "none"; };
+    document.getElementById("wipe").onclick = function () {
+      if (!confirm("Wipe notes and photos on this screen?")) return;
+      evs.forEach(function (e) { if (e.url) URL.revokeObjectURL(e.url); });
+      items = []; evs = [];
+      chainEl.innerHTML = "";
+      rightEl.innerHTML = "";
+      localStorage.removeItem("see_chain");
+      logTS("wiped screen, previous mint hash kept");
+    };
+    document.getElementById("full").onclick = function () {
+      var el = document.documentElement;
+      var active = document.fullscreenElement || document.webkitFullscreenElement;
+      try {
+        if (active) {
+          (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        } else {
+          var fn = el.requestFullscreen || el.webkitRequestFullscreen;
+          var p = fn && fn.call(el);
+          if (p && p.catch) p.catch(function (err) { logTS("fullscreen " + err.message); });
+        }
+      } catch (err) { logTS("fullscreen " + err.message); }
+    };
+    document.getElementById("inp").addEventListener("keydown", function (e) {
+      if (e.key !== "Enter") return;
+      var v = e.target.value.trim();
+      if (!v) return;
+      addNote(v.charAt(0) === ">" ? v.slice(1).trim() : v);
+      e.target.value = "";
+    });
+    document.getElementById("fi").addEventListener("change", function (e) {
+      if (e.target.files && e.target.files.length) handleFiles(e.target.files).catch(function (err) { logTS(err.message); });
+      e.target.value = "";
+    });
+    document.getElementById("tsOpen").onclick = function () {
+      var inp = document.createElement("input");
+      inp.type = "file"; inp.multiple = true; inp.accept = "*/*";
+      inp.onchange = function () { if (inp.files.length) handleFiles(inp.files).catch(function (err) { logTS(err.message); }); };
+      inp.click();
+    };
+    document.getElementById("tsGps").onclick = enableGps;
+    gpsLine.onclick = enableGps;
+    document.getElementById("tsBlob").onclick = function () {
+      var url = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: "text/html" }));
+      var w = window.open(url, "_blank");
+      logTS(w ? "blob opened" : "popup blocked");
+    };
+    document.getElementById("mint").onclick = function () { mint().catch(function (err) { alert("MINT " + err.message); logTS("MINT " + err.message); }); };
+    document.getElementById("genHash").onclick = function () { generateHash().catch(function (err) { logTS(err.message); }); };
+    document.getElementById("verifyHash").onclick = function () { verifyHash().catch(function (err) { logTS(err.message); }); };
+    document.getElementById("createRoom").onclick = function () { createRoom().catch(function (err) { logTS("room " + err.message); }); };
+    document.getElementById("joinRoom").onclick = function () { joinRoom().catch(function (err) { logTS("join " + err.message); }); };
+    document.getElementById("acceptAnswer").onclick = function () { acceptAnswer().catch(function (err) { logTS("answer " + err.message); }); };
+    document.getElementById("sendPeerBtn").onclick = sendPeer;
+    document.getElementById("copySdp").onclick = function () {
+      var box = document.getElementById("sdpOut");
+      box.focus(); box.select();
+      if (navigator.clipboard) navigator.clipboard.writeText(box.value).then(function () { logTS("SDP copied"); }, function () { logTS("select the box and copy"); });
+    };
+    bindSplitter();
+    logTS("boot " + VER + " clock bar splitter");
+  }
+  try { boot(); }
+  catch (err) { alert("BOOT " + err.message); }
+})();
+</script>
+</body>
+</html>
+<!-- END see-0.0.26gem -->
