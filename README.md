@@ -1,7 +1,5 @@
 # S.E.E. — Sovereign Evidence Engine
 
-# S.E.E. — Sovereign Evidence Engine
-
 The file that ran is see-0.0.26gem.html.
 Open that one. The older HTML files in this repo did not.
 
