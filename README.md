@@ -1,4 +1,19 @@
 # S.E.E. — Sovereign Evidence Engine
+
+# S.E.E. — Sovereign Evidence Engine
+
+The file that ran is see-0.0.26gem.html.
+Open that one. The older HTML files in this repo did not.
+
+One offline file. No server. No CDN.
+Clock, bottom bar, splitter, photo, minted zip, and the same SHA-256 on both pages.
+
+Not yet proven: reopening that zip, FULL, SWITCH, GPS, and a two-phone room.
+The room is copied text, not a camera QR.
+
+AGPL-3.0
+
+
 ### v0.0.24aadz — First Light
 
 **Make truth expensive to fake.**
