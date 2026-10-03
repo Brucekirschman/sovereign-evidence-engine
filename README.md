@@ -6,8 +6,6 @@ Open that one. The older HTML files in this repo did not.
 One offline file. No server. No CDN.
 Clock, bottom bar, splitter, photo, minted zip, and the same SHA-256 on both pages.
 
-Not yet proven: reopening that zip, FULL, SWITCH, GPS, and a two-phone room.
-The room is copied text, not a camera QR.
 
 AGPL-3.0
 
