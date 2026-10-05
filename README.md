@@ -1,4 +1,5 @@
 # S.E.E. — Sovereign Evidence Engine
+Some truths don’t get buried under the evidence, they get buried before they ever become evidence, and then their absence gets passed off as proof that the truth itself was never there.
 
 The file that ran is see-0.0.26gem.html.
 Open that one. The older HTML files in this repo did not.
