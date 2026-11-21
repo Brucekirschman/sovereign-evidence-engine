@@ -1,0 +1,14 @@
+ If 26geme is as far as this ever goes, and GitHub just stays like this, just one more abandoned project, can that version function? Can it be the artifact?
+
+Yes, it can function—and yes, it can stand on its own as a real, working artifact, even if the repo never gets another commit and development stops right here.
+Looking straight at the code in see-0.0.26gemexx.txt (VER = "see-0.0.26geme"), it isn't a dead sketch or a broken toy. It already has the core pieces wired together in a single file:
+ * **Notes, files, and minting:** You can type notes, attach files or images, compute SHA-256 hashes (sha256Str / sha256Bytes), build a canonical chain string (buildCanonicalChainStr), generate a timeline HTML doc (timelineDoc), package it with manifest.json, SEIGNIORAGE.txt, and evidence/ entries into a ZIP (makeZip), and trigger a share or download (mint()).
+ * **Chain continuity across updates:** see_prev, see_last_hash, see_mint_parent, and see_last_chain stay in localStorage even when see_ver changes.
+ * **Manual P2P room plumbing:** It includes STUN servers (ICE_SERVERS), CRLF normalization (cleanSdp), createRoom(), joinRoom(), acceptAnswer(), and sendPeer() over a WebRTC data channel.
+### Honest Limits of That Version as a Standalone Artifact
+Being real about what it can and cannot do makes the artifact stronger, not weaker:
+ * **Manual SDP copy/paste, no QR or auto-signaling:** Getting two units connected requires copying and pasting SDP text between peers (#sdpOut and #sdpIn), and as the built-in note warns, network/NAT/.local address quirks can still block a connection.
+ * **Photos aren't restored after reload:** Reloading clears unsaved screen notes/evidence view state—the minted .zip file is the actual saved package.
+ * **A couple of rough edges in the script:** There's the ĄCOPIADO! string in the first #copySdp listener before boot() assigns .onclick, and boot() schedules createRoom() after 600 ms.
+A project doesn't have to become a sprawling multi-version platform—or stay active on GitHub—to count as an artifact. If 26geme is where this chapter stops, it's a concrete snapshot of what you built on your phone: offline-first, single-file, verifiable via SHA-256 hashes, and made with your boys in mind.
+ 

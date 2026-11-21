@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.E.E. - Sovereign Evidence Engine (gemexx v0.0.26gemini)</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --surface-color: #1e1e1e;
+            --border-color: #333333;
+            --accent-color: #00ffcc;
+            --text-color: #e0e0e0;
+            --text-muted: #888888;
+            --danger-color: #ff5555;
+            --success-color: #55ff55;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: monospace, sans-serif; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { font-size: 1.2rem; color: var(--accent-color); }
+        .status-badge {
+            font-size: 0.8rem;
+            padding: 2px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        .panel {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        h2 { font-size: 1rem; margin-bottom: 8px; color: var(--accent-color); }
+        textarea {
+            width: 100%;
+            height: 80px;
+            background: #000;
+            color: var(--accent-color);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-size: 0.85rem;
+            resize: vertical;
+            margin-bottom: 8px;
+        }
+        input[type="text"] {
+            width: 100%;
+            background: #000;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        button {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+        button:hover { opacity: 0.9; }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            background: #0a0a0a;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .msg {
+            padding: 6px 10px;
+            border-radius: 4px;
+            max-width: 85%;
+            word-break: break-word;
+        }
+        .msg.local { background: #1a3a3a; align-self: flex-end; border-left: 3px solid var(--accent-color); }
+        .msg.remote { background: #2a2a2a; align-self: flex-start; border-left: 3px solid #888; }
+        .msg.system { background: #332200; align-self: center; color: #ffaa00; font-size: 0.8rem; width: 100%; text-align: center; }
+        .chat-input-row {
+            display: flex;
+            padding: 8px;
+            background: var(--surface-color);
+            border-top: 1px solid var(--border-color);
+        }
+        .chat-input-row input {
+            flex: 1;
+            margin-bottom: 0;
+            margin-right: 8px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media(max-width: 600px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+        .crypto-box {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            word-break: break-all;
+            background: #000;
+            padding: 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>S.E.E. // gemexx v0.0.26gemini</h1>
+        <div id="connection-status" class="status-badge" style="border-color: var(--danger-color); color: var(--danger-color);">OFFLINE</div>
+    </header>
+
+    <!-- Identity & Room Setup -->
+    <div class="panel">
+        <h2>1. Node Configuration</h2>
+        <div class="grid-2">
+            <div>
+                <label>Peer Alias:</label>
+                <input type="text" id="peer-alias" value="Node-Gemini">
+            </div>
+            <div>
+                <label>Room / Topic Hash:</label>
+                <input type="text" id="room-topic" value="see-bacalar-mesh-01">
+            </div>
+        </div>
+    </div>
+
+    <!-- WebRTC P2P Handshake Panel -->
+    <div class="panel">
+        <h2>2. Serverless P2P Handshake (SDP)</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">
+            Exchange Offer/Answer strings manually or via direct data channel copy-paste. Zero servers, zero CDNs.
+        </p>
+        <div class="grid-2">
+            <div>
+                <button onclick="createOffer()">Create Offer</button>
+                <textarea id="local-sdp" placeholder="Your SDP offer will appear here..."></textarea>
+            </div>
+            <div>
+                <button onclick="acceptOfferOrAnswer()">Accept & Connect</button>
+                <textarea id="remote-sdp" placeholder="Paste remote SDP offer/answer here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multi-Party IRC-Style Mesh Chat -->
+    <div class="panel">
+        <h2>3. Sovereign Encrypted Mesh (IRC-Style)</h2>
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="msg system">System initialized. Waiting for peer data channel connection...</div>
+            </div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-input" placeholder="Type sovereign message..." onkeydown="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Evidence & Hashing Ledger -->
+    <div class="panel">
+        <h2>4. Local Cryptographic Ledger (SHA-256)</h2>
+        <input type="text" id="evidence-text" placeholder="Enter note or observation to hash...">
+        <button onclick="mintEvidence()">Mint Evidence Hash</button>
+        <div id="evidence-output" class="crypto-box">Ready to mint immutable local hash record...</div>
+    </div>
+
+<script>
+    let pc = null;
+    let dataChannel = null;
+
+    function initPeerConnection() {
+        if (pc) return pc;
+        pc = new RTCPeerConnection({ iceServers: [] });
+        pc.onicecandidate = (event) => {
+            if (event.candidate === null) {
+                document.getElementById('local-sdp').value = JSON.stringify(pc.localDescription);
+            }
+        };
+        return pc;
+    }
+
+    async function createOffer() {
+        const connection = initPeerConnection();
+        dataChannel = connection.createDataChannel("see-mesh");
+        setupDataChannelEvents(dataChannel);
+        const offer = await connection.createOffer();
+        await connection.setLocalDescription(offer);
+        appendSystemMessage("SDP Offer generated. Copy and share with peer.");
+    }
+
+    async function acceptOfferOrAnswer() {
+        const connection = initPeerConnection();
+        const remoteText = document.getElementById('remote-sdp').value.trim();
+        if (!remoteText) return alert("Paste valid SDP string first.");
+        const remoteDesc = JSON.parse(remoteText);
+
+        if (remoteDesc.type === 'offer') {
+            connection.ondatachannel = (event) => {
+                dataChannel = event.channel;
+                setupDataChannelEvents(dataChannel);
+            };
+            await connection.setRemoteDescription(remoteDesc);
+            const answer = await connection.createAnswer();
+            await connection.setLocalDescription(answer);
+            appendSystemMessage("SDP Offer accepted. Answer generated. Send back to initiator.");
+        } else if (remoteDesc.type === 'answer') {
+            await connection.setRemoteDescription(remoteDesc);
+            appendSystemMessage("SDP Answer accepted. Finalizing handshake...");
+        }
+    }
+
+    function setupDataChannelEvents(channel) {
+        channel.onopen = () => {
+            document.getElementById('connection-status').innerText = "MESH ONLINE";
+            document.getElementById('connection-status').style.borderColor = "var(--success-color)";
+            document.getElementById('connection-status').style.color = "var(--success-color)";
+            appendSystemMessage("Data channel connection established successfully.");
+        };
+        channel.onclose = () => {
+            document.getElementById('connection-status').innerText = "OFFLINE";
+            document.getElementById('connection-status').style.borderColor = "var(--danger-color)";
+            document.getElementById('connection-status').style.color = "var(--danger-color)";
+            appendSystemMessage("Data channel closed.");
+        };
+        channel.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                appendChatMessage(data.alias || "Peer", data.text, "remote");
+            } catch (e) {
+                appendChatMessage("Peer", event.data, "remote");
+            }
+        };
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const text = input.value.trim();
+        const alias = document.getElementById('peer-alias').value;
+        if (!text) return;
+        const payload = JSON.stringify({ alias: alias, text: text, timestamp: Date.now() });
+        if (dataChannel && dataChannel.readyState === 'open') {
+            dataChannel.send(payload);
+            appendChatMessage("You", text, "local");
+            input.value = "";
+        } else {
+            alert("Data channel is not open yet. Complete handshake first.");
+        }
+    }
+
+    function appendChatMessage(sender, text, type) {
+        const container = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = `msg ${type}`;
+        div.innerText = `[${sender}] ${text}`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    function appendSystemMessage(text) {
+        const container = document.getElementById('chat-messages');
+        const div = document.createElement('div');
+        div.className = "msg system";
+        div.innerText = `*** ${text} ***`;
+        container.appendChild(div);
+        container.scrollTop = container.scrollHeight;
+    }
+
+    async function mintEvidence() {
+        const text = document.getElementById('evidence-text').value.trim();
+        if (!text) return;
+        const encoder = new TextEncoder();
+        const data = encoder.encode(text + "::" + Date.now());
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        document.getElementById('evidence-output').innerText = "SHA-256: " + hashHex;
+    }
+</script>
+
+</body>
+</html>
+
+
